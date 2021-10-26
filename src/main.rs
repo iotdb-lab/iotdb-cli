@@ -69,12 +69,17 @@ fn readline(config: Config) {
             loop {
                 let readline = rl.readline("IOTDB#> ");
                 match readline {
-                    Ok(line) => {
-                        rl.add_history_entry(line.as_str());
-                        if line.contains("exit") || line.contains("quit") {
+                    Ok(sql) => {
+                        if sql.trim().is_empty() {
+                            continue;
+                        }
+
+                        rl.add_history_entry(sql.as_str());
+                        if sql.contains("exit") || sql.contains("quit") {
                             break;
                         }
-                        match session.sql(line.as_str()) {
+
+                        match session.sql(sql.as_str()) {
                             Ok(mut ds) => ds.show(),
                             Err(_) => {}
                         }
@@ -140,6 +145,5 @@ fn main() {
             config.debug(debug).build();
         }
     }
-
     readline(config)
 }
