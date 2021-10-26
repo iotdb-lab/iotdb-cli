@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="https://github.com/francis-du/iotdb-cli/blob/main/LICENSE.html">License</a></li><li class="chapter-item expanded affix "><a href="https://github.com/francis-du/iotdb-cli/actions?query=workflow%3Acargo-test.html">Rust Build</a></li><li class="chapter-item expanded affix "><a href="https://github.com/francis-du/iotdb-cli/actions?query=workflow%3Acargo-publish.html">Crates Publish</a></li><li class="spacer"></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="get-started.html"><strong aria-hidden="true">1.</strong> Get started</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -135,9 +135,129 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="license"><a class="header" href="#license">License</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="rust-build"><a class="header" href="#rust-build">Rust Build</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="crates-publish"><a class="header" href="#crates-publish">Crates Publish</a></h1>
+                        <div align="center">
+<p><img src="https://raw.githubusercontent.com/francis-du/iotdb-rs/main/iotdb-rs.png" alt="Logo" /></p>
+<h1 id="iotdb-cli"><a class="header" href="#iotdb-cli">iotdb-cli</a></h1>
+<h3 id="wip-apache-iotdb-cli-client-written-in-rust"><a class="header" href="#wip-apache-iotdb-cli-client-written-in-rust">(WIP) Apache IotDB CLI Client written in Rust</a></h3>
+<p><a href="https://github.com/francis-du/iotdb-cli/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square&amp;color=%23E5531A" alt="License" /></a>
+<a href="https://github.com/francis-du/iotdb-cli/actions?query=workflow%3Acargo-test"><img src="https://img.shields.io/github/workflow/status/francis-du/iotdb-cli/cargo-test?label=build&amp;style=flat-square" alt="Rust Build" /></a>
+<a href="https://github.com/francis-du/iotdb-cli/actions?query=workflow%3Acargo-publish"><img src="https://img.shields.io/github/workflow/status/francis-du/iotdb-cli/cargo-publish?label=publish&amp;style=flat-square" alt="Crates Publish" /></a></p>
+</div>
+<hr />
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<pre><code class="language-shell">cargo install iotdb-cli
+</code></pre>
+<h2 id="usage"><a class="header" href="#usage">Usage</a></h2>
+<pre><code class="language-shell">iotdb -h
+</code></pre>
+<pre><code class="language-shell">
+▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
+ ██  ▄█▀    ██     ██     ██   ██   ██   ██
+ ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
+ ██  ▀█▄     ██    ██     ██    ██  ██    ██
+▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀      0.0.1
+
+USAGE:
+    iotdb [FLAGS] [OPTIONS]
+
+FLAGS:
+    -d, --debug      Enable debug mode
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --endpoint &lt;endpoint&gt;      Endpoint
+    -H, --host &lt;host&gt;              Server host name
+        --log-level &lt;log-level&gt;    Logger level
+    -p, --password &lt;password&gt;      User password
+    -P, --port &lt;port&gt;              Server port
+    -t, --timezone &lt;timezone&gt;      timezone
+    -u, --user &lt;user&gt;              User name
+
+</code></pre>
+<ol>
+<li>Connect to IotDB server</li>
+</ol>
+<pre><code class="language-shell">iotdb -u root -p root --endpoint 127.0.0.1:6667 -t UTC+8
+</code></pre>
+<ol start="2">
+<li>Exec SQL</li>
+</ol>
+<pre><code class="language-sql">SET STORAGE GROUP TO root.ln
+SHOW STORAGE GROUP
+
+CREATE TIMESERIES root.ln.wf01.wt01.status WITH DATATYPE=BOOLEAN, ENCODING=PLAIN
+CREATE TIMESERIES root.ln.wf01.wt01.temperature WITH DATATYPE=FLOAT, ENCODING=RLE
+
+SHOW TIMESERIES
+SHOW TIMESERIES root.ln.wf01.wt01.status
+
+INSERT INTO root.ln.wf01.wt01(timestamp,status) values(100,true);
+INSERT INTO root.ln.wf01.wt01(timestamp,status,temperature) values(200,false,20.71)
+
+SELECT status FROM root.ln.wf01.wt01
+SELECT * FROM root.ln.wf01.wt01
+
+</code></pre>
+<ol start="3">
+<li>Result</li>
+</ol>
+<pre><code class="language-shell">▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
+ ██  ▄█▀    ██     ██     ██   ██   ██   ██
+ ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
+ ██  ▀█▄     ██    ██     ██    ██  ██    ██
+▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
+
+Connect server: 127.0.0.1:6667
+Version: 0.0.1
+IOTDB#&gt; SET STORAGE GROUP TO root.ln
+IOTDB#&gt; SHOW STORAGE GROUP
++---------------+
+| storage group |
++===============+
+| root.ln       |
++---------------+
+| root.sg1      |
++---------------+
+IOTDB#&gt; 
+IOTDB#&gt; CREATE TIMESERIES root.ln.wf01.wt01.status WITH DATATYPE=BOOLEAN, ENCODING=PLAIN
+IOTDB#&gt; CREATE TIMESERIES root.ln.wf01.wt01.temperature WITH DATATYPE=FLOAT, ENCODING=RLE
+IOTDB#&gt; 
+IOTDB#&gt; SHOW TIMESERIES
++-------------------------------+-------+---------------+----------+----------+-------------+------+------------+
+| timeseries                    | alias | storage group | dataType | encoding | compression | tags | attributes |
++===============================+=======+===============+==========+==========+=============+======+============+
+| root.ln.wf01.wt01.temperature | null  | root.ln       | FLOAT    | RLE      | SNAPPY      | null | null       |
++-------------------------------+-------+---------------+----------+----------+-------------+------+------------+
+| root.ln.wf01.wt01.status      | null  | root.ln       | BOOLEAN  | PLAIN    | SNAPPY      | null | null       |
++-------------------------------+-------+---------------+----------+----------+-------------+------+------------+
+IOTDB#&gt; SHOW TIMESERIES root.ln.wf01.wt01.status
++--------------------------+-------+---------------+----------+----------+-------------+------+------------+
+| timeseries               | alias | storage group | dataType | encoding | compression | tags | attributes |
++==========================+=======+===============+==========+==========+=============+======+============+
+| root.ln.wf01.wt01.status | null  | root.ln       | BOOLEAN  | PLAIN    | SNAPPY      | null | null       |
++--------------------------+-------+---------------+----------+----------+-------------+------+------------+
+IOTDB#&gt; 
+IOTDB#&gt; INSERT INTO root.ln.wf01.wt01(timestamp,status) values(100,true);
+IOTDB#&gt; INSERT INTO root.ln.wf01.wt01(timestamp,status,temperature) values(200,false,20.71)
+IOTDB#&gt; 
+IOTDB#&gt; SELECT status FROM root.ln.wf01.wt01
++--------------------------------+--------------------------+
+| Time                           | root.ln.wf01.wt01.status |
++================================+==========================+
+| 1970-01-01 08:00:00.100 +08:00 | true                     |
++--------------------------------+--------------------------+
+| 1970-01-01 08:00:00.100 +08:00 | false                    |
++--------------------------------+--------------------------+
+IOTDB#&gt; SELECT * FROM root.ln.wf01.wt01
++--------------------------------+-------------------------------+--------------------------+
+| Time                           | root.ln.wf01.wt01.temperature | root.ln.wf01.wt01.status |
++================================+===============================+==========================+
+| 1970-01-01 08:00:00.100 +08:00 | null                          | true                     |
++--------------------------------+-------------------------------+--------------------------+
+| 1970-01-01 08:00:00.100 +08:00 | 20.71                         | false                    |
++--------------------------------+-------------------------------+--------------------------+
+</code></pre>
 
                     </main>
 
