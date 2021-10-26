@@ -30,7 +30,7 @@ iotdb -h
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
  ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
  ██  ▀█▄     ██    ██     ██    ██  ██    ██
-▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀      0.1.0
+▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀      0.0.1
 
 USAGE:
     iotdb-cli [FLAGS] [OPTIONS]
@@ -52,7 +52,7 @@ OPTIONS:
 ## Run
 
 ```shell
-iotdb -u root -p root --endpoint 127.0.0.1:6667
+iotdb -u root -p root --endpoint 127.0.0.1:6667 -t UTC+8
 
 ▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
@@ -61,7 +61,7 @@ iotdb -u root -p root --endpoint 127.0.0.1:6667
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
 Connect server: 127.0.0.1:6667
-Version: 0.1.0
+Version: 0.0.1
 IOTDB#> SHOW STORAGE GROUP
 +---------------+
 | storage group |

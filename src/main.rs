@@ -36,6 +36,10 @@ struct CliOpts {
     #[structopt(long)]
     endpoint: Option<String>,
 
+    /// timezone
+    #[structopt(short, long)]
+    timezone: Option<String>,
+
     /// Logger level
     #[structopt(long)]
     log_level: Option<String>,
@@ -104,6 +108,7 @@ fn main() {
             user,
             password,
             endpoint,
+            timezone,
             log_level,
             debug,
         } => {
@@ -121,6 +126,11 @@ fn main() {
             if user.is_some() && password.is_some() {
                 config.user(user.unwrap().as_str());
                 config.password(password.unwrap().as_str());
+            }
+
+            // timezone
+            if timezone.is_some() {
+                config.zone_id(timezone.unwrap().as_str());
             }
 
             // log level
