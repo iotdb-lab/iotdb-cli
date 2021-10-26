@@ -26,6 +26,7 @@ iotdb -h
 ```
 
 ```shell
+
 ▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
  ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
@@ -33,7 +34,7 @@ iotdb -h
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀      0.0.1
 
 USAGE:
-    iotdb-cli [FLAGS] [OPTIONS]
+    iotdb [FLAGS] [OPTIONS]
 
 FLAGS:
     -d, --debug      Enable debug mode
@@ -46,10 +47,10 @@ OPTIONS:
         --log-level <log-level>    Logger level
     -p, --password <password>      User password
     -P, --port <port>              Server port
+    -t, --timezone <timezone>      timezone
     -u, --user <user>              User name
-```
 
-## Run
+```
 
 1. Connect to IotDB server
 
