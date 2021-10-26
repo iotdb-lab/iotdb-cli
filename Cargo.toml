@@ -1,7 +1,7 @@
 [package]
 name = "iotdb-cli"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
 authors = ["francis-du <francis@francisdu.com>"]
@@ -10,6 +10,12 @@ documentation = "https://docs.rs/iotdb-cli"
 description = "Apache IotDB CLI Client written in Rust"
 keywords = ["cli", "iotdb"]
 
+[[bin]]
+name = "iotdb"
+path = "src/main.rs"
+
 [dependencies]
-iotdb = { git = "https://github.com/francis-du/iotdb-rs.git", branch = "main" }
+dirs = "4.0.0"
 structopt = "0.3"
+rustyline = "9.0.0"
+iotdb = { git = "https://github.com/francis-du/iotdb-rs.git", rev = "0eff281" }
