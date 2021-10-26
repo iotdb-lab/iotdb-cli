@@ -2,7 +2,7 @@ name: mdbook-build
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   mdbook-build:
