@@ -4,8 +4,7 @@ use rustyline::Editor;
 use std::path::PathBuf;
 use structopt::StructOpt;
 
-const VERSION: &str = env!("CARGO_PKG_VERSION");
-const ASCII_NAME: &str = "\
+const ASCII_NAME: &str = "
 ▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
  ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
@@ -15,99 +14,58 @@ const ASCII_NAME: &str = "\
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = ASCII_NAME)]
-struct CliOpts {
-    /// Server host name
+struct Opt {
+    /// Execute sql like `iotdb "SHOW STORAGE GROUP"`
+    sql: Option<String>,
+
+    /// Set server hostname or IP
     #[structopt(short = "H", long)]
     host: Option<String>,
 
-    /// Server port
+    /// Set server port
     #[structopt(short = "P", long)]
     port: Option<String>,
 
-    /// User name
+    /// Set user name
     #[structopt(short, long)]
     user: Option<String>,
 
-    /// User password
+    /// Set user password
     #[structopt(short, long)]
     password: Option<String>,
 
-    /// Endpoint
+    /// Set server endpoint, eg: host:port
     #[structopt(long)]
     endpoint: Option<String>,
 
-    /// timezone
+    /// Set timezone, eg: UTC+8
     #[structopt(short, long)]
     timezone: Option<String>,
 
-    /// Logger level
+    /// Set logger level
     #[structopt(long)]
     log_level: Option<String>,
 
     /// Enable debug mode
     #[structopt(short, long)]
     debug: bool,
+
+    /// Subcommands
+    #[structopt(subcommand)]
+    command: Option<Command>,
 }
 
-fn readline(config: Config) {
-    let his_file: PathBuf = dirs::home_dir()
-        .unwrap_or(PathBuf::from("/home"))
-        .join("iotdb.his");
-    let session = Session::new(config.clone());
-
-    match session.open() {
-        Ok(mut session) => {
-            println!(
-                "{}\nConnect server: {}\nVersion: {}",
-                ASCII_NAME,
-                config.endpoint.to_string(),
-                VERSION
-            );
-
-            let mut rl = Editor::<()>::new();
-            rl.load_history(his_file.as_path()).unwrap();
-            loop {
-                let readline = rl.readline("IOTDB#> ");
-                match readline {
-                    Ok(sql) => {
-                        if sql.trim().is_empty() {
-                            continue;
-                        }
-
-                        rl.add_history_entry(sql.as_str());
-                        if sql.contains("exit") || sql.contains("quit") {
-                            break;
-                        }
-
-                        match session.sql(sql.as_str()) {
-                            Ok(mut ds) => ds.show(),
-                            Err(_) => {}
-                        }
-                    }
-                    Err(ReadlineError::Interrupted) => {
-                        println!("CTRL-C");
-                        break;
-                    }
-                    Err(ReadlineError::Eof) => {
-                        println!("CTRL-D");
-                        break;
-                    }
-                    Err(err) => {
-                        println!("Error: {:?}", err);
-                        break;
-                    }
-                }
-            }
-            rl.save_history(his_file.as_path()).unwrap();
-        }
-        Err(error) => panic!("{}", error),
-    }
+#[derive(Debug, StructOpt)]
+enum Command {
+    ///TODO: Execute sql from file
+    File { path: String },
 }
 
 fn main() {
     let mut config = Config::new();
-    match CliOpts::from_args() {
-        CliOpts {
+    match Opt::from_args() {
+        Opt {
+            sql,
             host,
             port,
             user,
@@ -116,6 +74,7 @@ fn main() {
             timezone,
             log_level,
             debug,
+            command,
         } => {
             // set endpoint
             if host.is_some() && port.is_some() {
@@ -143,7 +102,74 @@ fn main() {
                 config.log_level(log_level.unwrap().as_str());
             }
             config.debug(debug).build();
+
+            let prompt = format!("IOTDB#({})> ", config.clone().endpoint.to_string());
+            let mut session = open_session(config);
+
+            match command {
+                None => {
+                    if sql.is_none() {
+                        readline(session, prompt)
+                    } else {
+                        session.sql(sql.unwrap().as_str()).unwrap().show()
+                    }
+                }
+                Some(command) => match command {
+                    Command::File { .. } => todo!(),
+                },
+            }
         }
     }
-    readline(config)
+}
+
+fn open_session(config: Config) -> Session {
+    Session::new(config.clone()).open().unwrap()
+}
+
+fn readline(mut session: Session, prompt: String) {
+    println!("{}", ASCII_NAME);
+
+    let his_file: PathBuf = dirs::home_dir()
+        .unwrap_or(PathBuf::from("/home"))
+        .join("iotdb.his");
+
+    let mut rl = Editor::<()>::new();
+    rl.load_history(his_file.as_path()).unwrap();
+    loop {
+        let readline = rl.readline(prompt.as_str());
+        match readline {
+            Ok(sql) => {
+                if sql.trim().is_empty() {
+                    continue;
+                }
+
+                rl.add_history_entry(sql.as_str());
+                if sql.contains("exit") || sql.contains("quit") {
+                    session.close().unwrap();
+                    break;
+                }
+
+                match session.sql(sql.as_str()) {
+                    Ok(mut ds) => ds.show(),
+                    Err(_) => {}
+                }
+            }
+            Err(ReadlineError::Interrupted) => {
+                session.close().unwrap();
+                println!("Ctrl-C");
+                break;
+            }
+            Err(ReadlineError::Eof) => {
+                session.close().unwrap();
+                println!("Ctrl-D");
+                break;
+            }
+            Err(err) => {
+                session.close().unwrap();
+                println!("Error: {:?}", err);
+                break;
+            }
+        }
+        rl.save_history(his_file.as_path()).unwrap();
+    }
 }
