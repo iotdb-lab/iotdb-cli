@@ -71,9 +71,8 @@ iotdb -u root -p root --endpoint 127.0.0.1:6667 -t UTC+8
 $ iotdb "SHOW STORAGE GROUP"
 +---------------+
 | storage group |
-+===============+
-| root.ln       |
 +---------------+
+| root.ln       |
 | root.sg1      |
 +---------------+
 ```
@@ -90,9 +89,8 @@ $ iotdb -u root -p root --endpoint 127.0.0.1:6667 -t UTC+8
 IOTDB#(127.0.0.1:6667)>  SHOW STORAGE GROUP
 +---------------+
 | storage group |
-+===============+
-| root.ln       |
 +---------------+
+| root.ln       |
 | root.sg1      |
 +---------------+
 ```

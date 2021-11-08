@@ -1,0 +1,33 @@
+name: github-release
+
+on:
+  release:
+    types: [ created ]
+
+jobs:
+  github-release:
+    name: Release for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: iotdb
+            asset_name: iotdb-linux
+          - os: windows-latest
+            artifact_name: iotdb.exe
+            asset_name: iotdb.exe
+          - os: macos-latest
+            artifact_name: iotdb
+            asset_name: iotdb-mac
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: cargo build --release
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{secrets.DEPLOY_KEY}}
+          file: target/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}

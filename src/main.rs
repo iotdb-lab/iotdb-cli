@@ -128,13 +128,14 @@ fn open_session(config: Config) -> Session {
 
 fn readline(mut session: Session, prompt: String) {
     println!("{}", ASCII_NAME);
-
     let his_file: PathBuf = dirs::home_dir()
         .unwrap_or(PathBuf::from("/home"))
-        .join("iotdb.his");
+        .join(".iotdb_his");
 
     let mut rl = Editor::<()>::new();
-    rl.load_history(his_file.as_path()).unwrap();
+    if his_file.as_path().exists() {
+        rl.load_history(his_file.as_path()).unwrap();
+    }
     loop {
         let readline = rl.readline(prompt.as_str());
         match readline {
