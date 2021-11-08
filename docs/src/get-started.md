@@ -15,9 +15,15 @@
 
 ## Installation
 
+1. Using `Cargo`
+
 ```shell
 cargo install iotdb-cli
 ```
+
+2. From binary
+
+Download latest `iotdb` binary from [here](https://github.com/francis-du/iotdb-cli/releases/latest/).
 
 ## Usage
 
@@ -94,3 +100,7 @@ IOTDB#(127.0.0.1:6667)>  SHOW STORAGE GROUP
 | root.sg1      |
 +---------------+
 ```
+
+# License
+
+[Apache License 2.0](LICENSE)
