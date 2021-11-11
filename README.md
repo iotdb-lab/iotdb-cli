@@ -13,6 +13,8 @@
 
 ---
 
+![Alt](https://repobeats.axiom.co/api/embed/86055cf67fcaac9e6e93c64c9a7a1630686ceda1.svg "Repobeats analytics image")
+
 ## Installation
 
 1. Using `Cargo`
