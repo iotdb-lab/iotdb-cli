@@ -174,30 +174,27 @@ FLAGS:
     -V, --version    Prints version information
 
 OPTIONS:
-        --endpoint &lt;endpoint&gt;      Set server endpoint, eg: host:port
-    -H, --host &lt;host&gt;              Set server hostname or IP
-        --log-level &lt;log-level&gt;    Set logger level
-    -p, --password &lt;password&gt;      Set user password
-    -P, --port &lt;port&gt;              Set server port
-    -t, --timezone &lt;timezone&gt;      Set timezone, eg: UTC+8
-    -u, --user &lt;user&gt;              Set user name
+    -e, --endpoint &lt;endpoint&gt;    Set server endpoint, eg: `localhost:6667`
+    -H, --host &lt;host&gt;            Set server hostname or ip address, eg: `127.0.0.1`
+    -p, --password &lt;password&gt;    Set user password
+    -P, --port &lt;port&gt;            Set server port
+    -t, --timezone &lt;timezone&gt;    Set timezone, eg: `UTC+8`
+    -u, --user &lt;user&gt;            Set user name
 
 ARGS:
-    &lt;sql&gt;    Execute sql like `iotdb &quot;SHOW STORAGE GROUP&quot;`
+    &lt;sql&gt;    Execute single sql, eg: `iotdb &quot;show storage group&quot;`
 
 SUBCOMMANDS:
-    file    TODO: Execute sql from file
+    file    Execute batch form sql file, eg: `iotdb file ddl.sql`
     help    Prints this message or the help of the given subcommand(s)
 
 </code></pre>
 <ol>
-<li>Connect to server</li>
+<li>Connect to IoTDB server</li>
 </ol>
-<pre><code class="language-shell">iotdb -u root -p root --endpoint 127.0.0.1:6667 -t UTC+8
-</code></pre>
-<ol start="2">
-<li>Exec SQL</li>
-</ol>
+<ul>
+<li>Use default username and password</li>
+</ul>
 <pre><code class="language-shell">$ iotdb &quot;SHOW STORAGE GROUP&quot;
 +---------------+
 | storage group |
@@ -206,7 +203,19 @@ SUBCOMMANDS:
 | root.sg1      |
 +---------------+
 </code></pre>
-<pre><code class="language-shell">$ iotdb -u root -p root --endpoint 127.0.0.1:6667 -t UTC+8
+<ul>
+<li>Specify parameters</li>
+</ul>
+<pre><code class="language-shell">iotdb -u root -p root -e 127.0.0.1:6667 -t UTC+8
+
+or 
+
+iotdb -u root -p root -H 127.0.0.1 -P 6667 -t UTC+8
+</code></pre>
+<ol start="2">
+<li>Execute single SQL interactively</li>
+</ol>
+<pre><code class="language-shell">$ iotdb -u root -p root --e 127.0.0.1:6667 -t UTC+8
 
 ▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
@@ -221,6 +230,23 @@ IOTDB#(127.0.0.1:6667)&gt;  SHOW STORAGE GROUP
 | root.ln       |
 | root.sg1      |
 +---------------+
+</code></pre>
+<ol start="3">
+<li>Execute sql from the specified sql file</li>
+</ol>
+<pre><code class="language-shell">$iotdb file tests/create_and_insert.sql
+Statements: [
+    &quot;DELETE STORAGE GROUP root.test;&quot;,
+    &quot;CREATE TIMESERIES root.test.status WITH DATATYPE=BOOLEAN, ENCODING=PLAIN;&quot;,
+    &quot;CREATE TIMESERIES root.test.temperature WITH DATATYPE=FLOAT, ENCODING=RLE;&quot;,
+    &quot;INSERT INTO root.test(timestamp, status)\n values (1637960249484, true);&quot;,
+    &quot;INSERT INTO root.test(timestamp, status, temperature)\n values (1637960256493, false, 20.71);&quot;,
+    &quot;INSERT INTO root.test(timestamp, status, temperature)\n values (1637960261494, true, 32.43);&quot;,
+    &quot;INSERT INTO root.test(timestamp, status, temperature)\n values (1637960272492, false, 28.66);&quot;,
+    &quot;INSERT INTO root.test(timestamp, status, temperature)\n values (1637960272492, true, 22.61);&quot;,
+    &quot;INSERT INTO root.test(timestamp, status, temperature)\n values (1637960296493, false, 28.66);&quot;,
+]
+22:00:54 [INFO] Execute statements &quot;Execute batch statements successfully&quot;
 </code></pre>
 <h1 id="license"><a class="header" href="#license">License</a></h1>
 <p><a href="LICENSE">Apache License 2.0</a></p>
