@@ -1,7 +1,7 @@
-use iotdb::{Config, Endpoint, Session};
+use iotdb::{Config, ConfigBuilder, Endpoint, Session};
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use structopt::StructOpt;
 
 const ASCII_NAME: &str = "
@@ -15,10 +15,10 @@ const ASCII_NAME: &str = "
 #[derive(StructOpt, Debug)]
 #[structopt(name = ASCII_NAME)]
 struct Opt {
-    /// Execute sql like `iotdb "SHOW STORAGE GROUP"`
+    /// Execute single sql, eg: `iotdb "show storage group"`
     sql: Option<String>,
 
-    /// Set server hostname or IP
+    /// Set server hostname or ip address, eg: `127.0.0.1`
     #[structopt(short = "H", long)]
     host: Option<String>,
 
@@ -34,17 +34,13 @@ struct Opt {
     #[structopt(short, long)]
     password: Option<String>,
 
-    /// Set server endpoint, eg: host:port
-    #[structopt(long)]
+    /// Set server endpoint, eg: `localhost:6667`
+    #[structopt(short, long)]
     endpoint: Option<String>,
 
-    /// Set timezone, eg: UTC+8
+    /// Set timezone, eg: `UTC+8`
     #[structopt(short, long)]
     timezone: Option<String>,
-
-    /// Set logger level
-    #[structopt(long)]
-    log_level: Option<String>,
 
     /// Enable debug mode
     #[structopt(short, long)]
@@ -57,79 +53,88 @@ struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
-    ///TODO: Execute sql from file
+    /// Execute batch form sql file, eg: `iotdb file ddl.sql`
     File { path: String },
 }
 
 fn main() {
-    let mut config = Config::new();
-    match Opt::from_args() {
-        Opt {
-            sql,
-            host,
-            port,
-            user,
-            password,
-            endpoint,
-            timezone,
-            log_level,
-            debug,
-            command,
-        } => {
-            // set endpoint
-            if host.is_some() && port.is_some() {
-                config.endpoint(host.unwrap().as_str(), port.unwrap().as_str());
-            }
+    let mut builder = ConfigBuilder::new();
+    // match Opt::from_args() {
+    let Opt {
+        sql,
+        host,
+        port,
+        user,
+        password,
+        endpoint,
+        timezone,
+        debug,
+        command,
+    } = Opt::from_args();
 
-            if endpoint.is_some() {
-                let endpoint = endpoint.unwrap().as_str().parse::<Endpoint>().unwrap();
-                config.endpoint(endpoint.host.as_str(), endpoint.port.as_str());
-            }
+    // set endpoint
+    if let Some(endpoint) = endpoint {
+        let endpoint = endpoint.as_str().parse::<Endpoint>().unwrap();
+        builder.endpoint(endpoint.host.as_str(), endpoint.port.as_str());
+    } else if let Some(host) = host {
+        if let Some(port) = port {
+            builder.endpoint(host.as_str(), port.as_str());
+        }
+    }
 
-            // user and password
-            if user.is_some() && password.is_some() {
-                config.user(user.unwrap().as_str());
-                config.password(password.unwrap().as_str());
-            }
+    // user and password
+    if let Some(user) = user {
+        if let Some(password) = password {
+            builder.user(user.as_str());
+            builder.password(password.as_str());
+        }
+    }
 
-            // timezone
-            if timezone.is_some() {
-                config.zone_id(timezone.unwrap().as_str());
-            }
+    // timezone
+    if let Some(timezone) = timezone {
+        builder.time_zone(timezone.as_str());
+    }
 
-            // log level
-            if log_level.is_some() {
-                config.log_level(log_level.unwrap().as_str());
-            }
-            config.debug(debug).build();
+    // enable debug mode
+    builder.debug(debug);
 
-            let prompt = format!("IOTDB#({})> ", config.clone().endpoint.to_string());
-            let mut session = open_session(config);
+    let prompt = format!("IOTDB#({})> ", builder.build().endpoint.to_string());
+    let mut session = open_session(builder.build());
 
-            match command {
-                None => {
-                    if sql.is_none() {
-                        readline(session, prompt)
-                    } else {
-                        session.sql(sql.unwrap().as_str()).unwrap().show()
-                    }
-                }
-                Some(command) => match command {
-                    Command::File { .. } => todo!(),
-                },
+    match command {
+        None => {
+            if let Some(sql) = sql {
+                session.sql(sql.as_str()).unwrap().show()
+            } else {
+                readline(session, prompt)
             }
         }
+        Some(command) => match command {
+            Command::File { path } => {
+                let sql_file = Path::new(&path);
+                if sql_file.exists() {
+                    if !sql_file.is_file() || !path.ends_with(".sql") {
+                        println!("ERROR: {:?} is not a sql file", sql_file);
+                    } else {
+                        println!("Statements: {:#?}", sql_file_reader(sql_file));
+                        session.exec_batch(sql_file_reader(sql_file));
+                    }
+                } else {
+                    println!("ERROR: {:?} not exist", sql_file);
+                }
+            }
+        },
     }
 }
 
 fn open_session(config: Config) -> Session {
-    Session::new(config.clone()).open().unwrap()
+    Session::new(config).open().unwrap()
 }
 
 fn readline(mut session: Session, prompt: String) {
     println!("{}", ASCII_NAME);
     let his_file: PathBuf = dirs::home_dir()
-        .unwrap_or(PathBuf::from("/home"))
+        .unwrap_or_else(|| PathBuf::from("/home"))
         .join(".iotdb_his");
 
     let mut rl = Editor::<()>::new();
@@ -150,9 +155,8 @@ fn readline(mut session: Session, prompt: String) {
                     break;
                 }
 
-                match session.sql(sql.as_str()) {
-                    Ok(mut ds) => ds.show(),
-                    Err(_) => {}
+                if let Ok(mut ds) = session.sql(sql.as_str()) {
+                    ds.show()
                 }
             }
             Err(ReadlineError::Interrupted) => {
@@ -172,5 +176,49 @@ fn readline(mut session: Session, prompt: String) {
             }
         }
         rl.save_history(his_file.as_path()).unwrap();
+    }
+}
+
+fn sql_file_reader(path: &Path) -> Vec<String> {
+    use std::fs;
+    use std::io;
+    use std::io::BufRead;
+
+    let mut batch_sql: Vec<String> = vec![];
+    match fs::File::open(path) {
+        Ok(file) => {
+            let sql_lines = io::BufReader::new(file)
+                .lines()
+                .map(|s| s.unwrap_or_default())
+                .filter(|s| !s.is_empty())
+                .filter(|s| !s.starts_with("--"))
+                .filter(|s| s.len() != 1)
+                .map(|s| s.trim().to_string())
+                .collect::<Vec<String>>();
+
+            let mut tmp_string: String = String::new();
+            let mut is_tmp = false;
+            for line in sql_lines {
+                if line.ends_with(';') {
+                    if is_tmp {
+                        tmp_string.push_str(line.as_str());
+                        batch_sql.push(tmp_string.clone());
+                        tmp_string.clear();
+                        is_tmp = false;
+                    } else {
+                        batch_sql.push(line);
+                    }
+                } else {
+                    tmp_string.push_str(line.as_str());
+                    tmp_string.push_str("\n ");
+                    is_tmp = true;
+                }
+            }
+            batch_sql
+        }
+        Err(error) => {
+            println!("ERROR: {:?}", error);
+            vec![]
+        }
     }
 }
