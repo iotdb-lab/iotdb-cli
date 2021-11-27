@@ -39,7 +39,10 @@ iotdb -h
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
  ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
  ██  ▀█▄     ██    ██     ██    ██  ██    ██
-▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀      0.0.1
+▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
+
+Author: github.com/francis-du <me@francis.run>
+Version: iotdb-cli 0.0.2
 
 USAGE:
     iotdb [FLAGS] [OPTIONS] [sql] [SUBCOMMAND]
@@ -51,6 +54,7 @@ FLAGS:
 
 OPTIONS:
     -e, --endpoint <endpoint>    Set server endpoint, eg: `localhost:6667`
+    -f, --file <file>            Execute batch form sql file, eg: `iotdb -f ddl.sql`
     -H, --host <host>            Set server hostname or ip address, eg: `127.0.0.1`
     -p, --password <password>    Set user password
     -P, --port <port>            Set server port
@@ -61,8 +65,10 @@ ARGS:
     <sql>    Execute single sql, eg: `iotdb "show storage group"`
 
 SUBCOMMANDS:
-    file    Execute batch form sql file, eg: `iotdb file ddl.sql`
-    help    Prints this message or the help of the given subcommand(s)
+    file      Execute batch form sql file, eg: `iotdb file ddl.sql`
+    help      Prints this message or the help of the given subcommand(s)
+    update    Update binary(TODO)
+    usage     Print usage info
 
 ```
 
@@ -101,6 +107,12 @@ $ iotdb -u root -p root --e 127.0.0.1:6667 -t UTC+8
  ██  ▀█▄     ██    ██     ██    ██  ██    ██
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
+Author: github.com/francis-du <me@francis.run>
+Version: iotdb-cli v0.0.2
+Usage:
+    1. Print usage info: `?` or `help` 
+    2. Exec system command on OS: `!ps`
+    3. Exit: `exit` or `quit` or `Ctrl-C` or `Ctrl-D`
 IOTDB#(127.0.0.1:6667)>  SHOW STORAGE GROUP
 +---------------+
 | storage group |
@@ -114,6 +126,8 @@ IOTDB#(127.0.0.1:6667)>  SHOW STORAGE GROUP
 
 ```shell
 $ iotdb file tests/create_and_insert.sql
+$ iotdb -file tests/create_and_insert.sql
+$ iotdb -f tests/create_and_insert.sql
 Statements: [
     "DELETE STORAGE GROUP root.test;",
     "CREATE TIMESERIES root.test.status WITH DATATYPE=BOOLEAN, ENCODING=PLAIN;",
@@ -125,7 +139,13 @@ Statements: [
     "INSERT INTO root.test(timestamp, status, temperature)\n values (1637960272492, true, 22.61);",
     "INSERT INTO root.test(timestamp, status, temperature)\n values (1637960296493, false, 28.66);",
 ]
-22:00:54 [INFO] Execute statements "Execute batch statements successfully"
+23:00:23 [INFO] Execute batch statements successfully
+```
+
+4. Print usage info
+
+```shell
+$ iotdb usage
 ```
 
 # License
