@@ -19,8 +19,16 @@
 
 1. Using `Cargo`
 
+- Latest released version
+
 ```shell
-cargo install iotdb-cli
+cargo install -f iotdb-cli
+```
+
+- Latest dev version
+
+```shell
+cargo install -f --git  https://github.com/francis-du/iotdb-cli.git
 ```
 
 2. From binary
