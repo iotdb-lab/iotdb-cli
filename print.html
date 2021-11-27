@@ -163,7 +163,10 @@
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
  ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
  ██  ▀█▄     ██    ██     ██    ██  ██    ██
-▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀      0.0.1
+▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
+
+Author: github.com/francis-du &lt;me@francis.run&gt;
+Version: iotdb-cli 0.0.2
 
 USAGE:
     iotdb [FLAGS] [OPTIONS] [sql] [SUBCOMMAND]
@@ -175,6 +178,7 @@ FLAGS:
 
 OPTIONS:
     -e, --endpoint &lt;endpoint&gt;    Set server endpoint, eg: `localhost:6667`
+    -f, --file &lt;file&gt;            Execute batch form sql file, eg: `iotdb -f ddl.sql`
     -H, --host &lt;host&gt;            Set server hostname or ip address, eg: `127.0.0.1`
     -p, --password &lt;password&gt;    Set user password
     -P, --port &lt;port&gt;            Set server port
@@ -185,8 +189,10 @@ ARGS:
     &lt;sql&gt;    Execute single sql, eg: `iotdb &quot;show storage group&quot;`
 
 SUBCOMMANDS:
-    file    Execute batch form sql file, eg: `iotdb file ddl.sql`
-    help    Prints this message or the help of the given subcommand(s)
+    file      Execute batch form sql file, eg: `iotdb file ddl.sql`
+    help      Prints this message or the help of the given subcommand(s)
+    update    Update binary(TODO)
+    usage     Print usage info
 
 </code></pre>
 <ol>
@@ -223,6 +229,12 @@ iotdb -u root -p root -H 127.0.0.1 -P 6667 -t UTC+8
  ██  ▀█▄     ██    ██     ██    ██  ██    ██
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
+Author: github.com/francis-du &lt;me@francis.run&gt;
+Version: iotdb-cli v0.0.2
+Usage:
+    1. Print usage info: `?` or `help` 
+    2. Exec system command on OS: `!ps`
+    3. Exit: `exit` or `quit` or `Ctrl-C` or `Ctrl-D`
 IOTDB#(127.0.0.1:6667)&gt;  SHOW STORAGE GROUP
 +---------------+
 | storage group |
@@ -235,6 +247,8 @@ IOTDB#(127.0.0.1:6667)&gt;  SHOW STORAGE GROUP
 <li>Execute sql from the specified sql file</li>
 </ol>
 <pre><code class="language-shell">$ iotdb file tests/create_and_insert.sql
+$ iotdb -file tests/create_and_insert.sql
+$ iotdb -f tests/create_and_insert.sql
 Statements: [
     &quot;DELETE STORAGE GROUP root.test;&quot;,
     &quot;CREATE TIMESERIES root.test.status WITH DATATYPE=BOOLEAN, ENCODING=PLAIN;&quot;,
@@ -246,7 +260,12 @@ Statements: [
     &quot;INSERT INTO root.test(timestamp, status, temperature)\n values (1637960272492, true, 22.61);&quot;,
     &quot;INSERT INTO root.test(timestamp, status, temperature)\n values (1637960296493, false, 28.66);&quot;,
 ]
-22:00:54 [INFO] Execute statements &quot;Execute batch statements successfully&quot;
+23:00:23 [INFO] Execute batch statements successfully
+</code></pre>
+<ol start="4">
+<li>Print usage info</li>
+</ol>
+<pre><code class="language-shell">$ iotdb usage
 </code></pre>
 <h1 id="license"><a class="header" href="#license">License</a></h1>
 <p><a href="LICENSE">Apache License 2.0</a></p>
