@@ -113,7 +113,7 @@ IOTDB#(127.0.0.1:6667)>  SHOW STORAGE GROUP
 3. Execute sql from the specified sql file
 
 ```shell
-$iotdb file tests/create_and_insert.sql
+$ iotdb file tests/create_and_insert.sql
 Statements: [
     "DELETE STORAGE GROUP root.test;",
     "CREATE TIMESERIES root.test.status WITH DATATYPE=BOOLEAN, ENCODING=PLAIN;",

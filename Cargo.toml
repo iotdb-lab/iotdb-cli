@@ -1,6 +1,6 @@
 [package]
 name = "iotdb-cli"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 license = "Apache-2.0"
 readme = "README.md"
@@ -18,5 +18,5 @@ path = "src/main.rs"
 dirs = "4.0.0"
 structopt = "0.3"
 rustyline = "9.0.0"
-#iotdb = "0.0.5"
-iotdb = { git = "https://github.com/francis-du/iotdb-rs.git", rev = "117158e"}
+iotdb = "0.0.6"
+#iotdb = { git = "https://github.com/francis-du/iotdb-rs.git", rev = "117158e"}
