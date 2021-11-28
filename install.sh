@@ -4,6 +4,7 @@ NO_COLOR=$'\e[0m'
 ERROR=$'\e[0;31m'"ERROR: "
 INFO=$'\e[0;32m'"INFO: "
 WARN=$'\e[0;33m'"WARN: "
+LATEST="https://github.com/francis-du/iotdb-cli/releases/latest"
 LATEST_RELEASE="https://api.github.com/repos/francis-du/iotdb-cli/releases/latest"
 BIN_PATH="/usr/local/bin"
 VERSION=$1
@@ -68,7 +69,7 @@ download() {
         exit 1
       fi
     else
-      echo "${ERROR}Please install wget or curl${NO_COLOR}"
+      echo "${ERROR}Please install 'wget' or 'curl'"
       exit 1
     fi
   fi
@@ -77,13 +78,13 @@ download() {
 function install() {
   set_version
   echo "${INFO}Version: ${VERSION}"
-  echo "${INFO}Download from '${LATEST_RELEASE}'"
+  echo "${INFO}Latest release '${LATEST}'"
   asset_base_url="https://github.com/francis-du/iotdb-cli/releases/download/${VERSION}"
   case "$(uname -s)" in
   Linux*)
     bin_name="${BIN_PATH}/iotdb"
     asset_url="$asset_base_url/iotdb-linux"
-    echo "${INFO}Assert url '${asset_url}'"
+    echo "${INFO}Download from '${asset_url}'"
     download $asset_url $bin_name
 
     if [ -f "${bin_name}" ]; then
@@ -96,7 +97,7 @@ function install() {
   Darwin*)
     bin_name="${BIN_PATH}/iotdb"
     asset_url="${asset_base_url}/iotdb-mac"
-    echo "${INFO}Assert url '${asset_url}'"
+    echo "${INFO}Download from '${asset_url}'"
     download $asset_url $bin_name
 
     if [ -f "${bin_name}" ]; then
@@ -110,7 +111,7 @@ function install() {
     # TODO: Need to be test
     bin_name="${BIN_PATH}/iotdb.exe"
     asset_url="$asset_base_url/iotdb.exe"
-    echo "${INFO}Assert url '${asset_url}'"
+    echo "${INFO}Download from '${asset_url}'"
     download $asset_url $bin_name
 
     if [ -f "${bin_name}" ]; then
@@ -123,7 +124,7 @@ function install() {
     # TODO: Need to be test
     bin_name="${BIN_PATH}/iotdb.exe"
     asset_url=$asset_base_url"/iotdb.exe"
-    echo "${INFO}Assert url '${asset_url}'"
+    echo "${INFO}Download from '${asset_url}'"
     download $asset_url $bin_name
 
     if [ -f "${bin_name}" ]; then

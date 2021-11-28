@@ -31,9 +31,19 @@ cargo install -f iotdb-cli
 cargo install -f --git  https://github.com/francis-du/iotdb-cli.git
 ```
 
-2. From binary
+2. From [binary](https://github.com/francis-du/iotdb-cli/releases/latest)
 
-Download latest `iotdb` binary from [here](https://github.com/francis-du/iotdb-cli/releases/latest/).
+```shell
+curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh  | sh
+
+curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh -s -- x.x.x
+```
+
+```shell
+wget -qO- https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh
+
+wget -qO- https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh -s -- x.x.x
+```
 
 ## Usage
 
