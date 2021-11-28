@@ -19,22 +19,16 @@
 
 1. Using `Cargo`
 
-- Latest released version
-
 ```shell
 cargo install -f iotdb-cli
-```
 
-- Latest dev version
-
-```shell
 cargo install -f --git  https://github.com/francis-du/iotdb-cli.git
 ```
 
 2. From [binary](https://github.com/francis-du/iotdb-cli/releases/latest)
 
 ```shell
-curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh  | sh
+curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh
 
 curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh -s -- x.x.x
 ```
