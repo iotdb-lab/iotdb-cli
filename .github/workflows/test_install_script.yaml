@@ -20,3 +20,4 @@ jobs:
       - name: test install script
         run: |
           curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh
+          curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh
