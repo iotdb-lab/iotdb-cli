@@ -40,8 +40,8 @@ impl Cli {
                 match sub_cmd {
                     // exec sql form file
                     SubCmd::File { file_path } => {
-                        if let Some(file_path) = file_path {
-                            common::exec_batch_from_file(conf, file_path);
+                        if let Some(file) = file_path {
+                            common::exec_batch_from_file(conf, file);
                         }
                     }
                     SubCmd::Usage => sub_cmd.usage(),
@@ -57,6 +57,7 @@ impl Cli {
     /// Set session conf
     pub fn session_conf(&self) -> Config {
         let Cli {
+            dev,
             host,
             port,
             user,
@@ -68,30 +69,34 @@ impl Cli {
         } = self;
 
         let mut builder = ConfigBuilder::new();
-        // enable debug mode
-        builder.debug(*debug);
-
-        // set endpoint
-        if let Some(endpoint) = endpoint {
-            let endpoint = endpoint.as_str().parse::<Endpoint>().unwrap();
-            builder.endpoint(endpoint.host.as_str(), endpoint.port.as_str());
-        } else if let Some(host) = host {
-            if let Some(port) = port {
-                builder.endpoint(host.as_str(), port.as_str());
-            }
-        }
-
-        // user and password
-        if let Some(user) = user {
-            if let Some(password) = password {
-                builder.user(user.as_str());
-                builder.password(password.as_str());
-            }
-        }
 
         // timezone
         if let Some(timezone) = timezone {
             builder.time_zone(timezone.as_str());
+        }
+
+        // enable debug mode
+        builder.debug(*debug);
+
+        // user and password
+        if let Some(user) = user {
+            builder.user(user.as_str());
+        }
+        if let Some(password) = password {
+            builder.password(password.as_str());
+        }
+
+        // set endpoint
+        if host.is_some() && port.is_some() {
+            builder.endpoint(
+                host.as_ref().unwrap().as_str(),
+                port.as_ref().unwrap().as_str(),
+            );
+        } else if let Some(endpoint) = endpoint {
+            let endpoint = endpoint.as_str().parse::<Endpoint>().unwrap();
+            builder.endpoint(endpoint.host.as_str(), endpoint.port.as_str());
+        } else if *dev {
+            builder.endpoint("119.84.128.59", "6667");
         }
 
         builder.build()
