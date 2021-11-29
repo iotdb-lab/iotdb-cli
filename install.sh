@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # shellcheck disable=SC3003
 
 NO_COLOR=$'\e[0m'

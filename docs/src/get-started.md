@@ -5,17 +5,26 @@
 <h1>iotdb-cli</h1>
 <h3>Apache IotDB CLI Client written in Rust</h3>
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square&color=%23E5531A)](https://github.com/francis-du/iotdb-cli/blob/main/LICENSE)
+[![Contribute](https://img.shields.io/badge/contribute-now-a94064?color=%23E5531A&)](https://gitpod.io/#https://github.com/francis-du/iotdb-cli)
+[![downloads](https://img.shields.io/crates/d/iotdb-cli?style=flat-square&color=%23E5531A)](https://crates.io/crates/iotdb-cli)
+[![GitHub Release](https://img.shields.io/github/v/release/francis-du/iotdb-cli?include_prereleases&sort=semver&color=%23E5531A&style=flat-square)](https://github.com/francis-du/iotdb-cli/releases)
+![Top Lang](https://img.shields.io/github/languages/top/trisasnava/koifish?color=%23E5531A&style=flat-square)
 [![Rust Build](https://img.shields.io/github/workflow/status/francis-du/iotdb-cli/cargo-test?label=build&style=flat-square)](https://github.com/francis-du/iotdb-cli/actions?query=workflow%3Acargo-test)
+[![Docs Build](https://img.shields.io/github/workflow/status/francis-du/iotdb-cli/mdbook-deploy?label=docs%20build&style=flat-square)](https://github.com/francis-du/iotdb-cli/actions?query=workflow:mdbook-deploy)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square&color=%23E5531A)](https://github.com/francis-du/iotdb-cli/blob/main/LICENSE)
 [![Crates Publish](https://img.shields.io/github/workflow/status/francis-du/iotdb-cli/cargo-publish?label=publish&style=flat-square)](https://github.com/francis-du/iotdb-cli/actions?query=workflow%3Acargo-publish)
 
 </div>
 
 ---
 
-![Alt](https://repobeats.axiom.co/api/embed/86055cf67fcaac9e6e93c64c9a7a1630686ceda1.svg "Repobeats analytics image")
+[![Alt](https://repobeats.axiom.co/api/embed/86055cf67fcaac9e6e93c64c9a7a1630686ceda1.svg "Repobeats analytics image")](https://github.com/francis-du/iotdb-cli/pulse)
 
 ## Installation
+
+[![Linux supported](https://img.shields.io/badge/Linux%20x86__64-supported%20✓-228B22?style=flat-square&logo=linux)](https://github.com/francis-du/iotdb-cli/releases/latest)
+[![macOS supported](https://img.shields.io/badge/macOS%20x86__64-supported%20✓-228B22?style=flat-square&logo=apple)](https://github.com/francis-du/iotdb-cli/releases/latest)
+[![Windows supported](https://img.shields.io/badge/Windows%20x86__64-supported%20✓-228B22?style=flat-square&logo=windows)](https://github.com/francis-du/iotdb-cli/releases/latest)
 
 1. Using `Cargo`
 
@@ -28,15 +37,15 @@ cargo install -f --git  https://github.com/francis-du/iotdb-cli.git
 2. From [binary](https://github.com/francis-du/iotdb-cli/releases/latest)
 
 ```shell
-curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh
+curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | bash
 
-curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh -s -- x.x.x
+curl -s https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | bash -s -- x.x.x
 ```
 
 ```shell
-wget -qO- https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh
+wget -qO- https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | bash
 
-wget -qO- https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | sh -s -- x.x.x
+wget -qO- https://raw.githubusercontent.com/francis-du/iotdb-cli/main/install.sh | bash -s -- x.x.x
 ```
 
 ## Usage
@@ -46,7 +55,6 @@ iotdb -h
 ```
 
 ```shell
-
 ▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
  ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
@@ -54,7 +62,7 @@ iotdb -h
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
 Author: github.com/francis-du <me@francis.run>
-Version: iotdb-cli 0.0.2
+Version: iotdb-cli 0.0.3-alpha
 
 USAGE:
     iotdb [FLAGS] [OPTIONS] [sql] [SUBCOMMAND]
@@ -77,11 +85,13 @@ ARGS:
     <sql>    Execute single sql, eg: `iotdb "show storage group"`
 
 SUBCOMMANDS:
-    file      Execute batch form sql file, eg: `iotdb file ddl.sql`
-    help      Prints this message or the help of the given subcommand(s)
-    update    Update binary(TODO)
-    usage     Print usage info
-
+    csv        Csv util(TODO)
+    file       Execute batch form sql file, eg: `iotdb file ddl.sql`
+    help       Prints this message or the help of the given subcommand(s)
+    load       Load TsFile util(TODO)
+    update     Update binary(TODO)
+    usage      Print usage info
+    version    Prints version information
 ```
 
 1. Connect to IoTDB server
