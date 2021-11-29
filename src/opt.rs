@@ -1,7 +1,7 @@
 use crate::{ASCII_NAME, AUTHORS, PKG_NAME};
 use structopt::StructOpt;
 
-#[derive(StructOpt, Debug)]
+#[derive(Debug, Clone, StructOpt)]
 #[structopt(name = format ! ("{}\nAuthor: {}\nVersion: {}", ASCII_NAME, AUTHORS, PKG_NAME))]
 pub struct Cli {
     /// Execute single sql, eg: `iotdb "show storage group"`
@@ -44,10 +44,22 @@ pub struct Cli {
     pub sub_cmd: Option<SubCmd>,
 }
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Clone, StructOpt)]
 pub enum SubCmd {
     /// Execute batch form sql file, eg: `iotdb file ddl.sql`
     File { file_path: Option<String> },
+
+    /// Csv util(TODO)
+    Csv {
+        #[structopt(short, long)]
+        import: Option<String>,
+
+        #[structopt(short, long)]
+        export: Option<String>,
+    },
+
+    /// Load TsFile util(TODO)
+    Load,
 
     /// Print usage info
     Usage,

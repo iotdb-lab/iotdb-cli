@@ -1,3 +1,4 @@
+use crate::VERSION;
 use std::fs;
 use std::io;
 use std::io::BufRead;
@@ -40,7 +41,7 @@ pub fn sql_file_reader(file_path: &str) -> Vec<String> {
 
 #[allow(dead_code)]
 pub fn update() {
-    todo!()
+    println!("Update to {:?}", VERSION)
 }
 
 #[allow(dead_code)]

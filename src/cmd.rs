@@ -58,33 +58,33 @@ pub fn run() {
         std::process::exit(0);
     }
 
-    // open session
-    let prompt = format!("IOTDB#({})> ", conf.endpoint.to_string());
-    let mut session = open_session(conf.clone());
-
-    // sub command
+    // No session sub command
     match sub_cmd {
         None => {
+            // open session
+            let prompt = format!("IOTDB#({})> ", conf.endpoint.to_string());
+            let mut session = open_session(conf);
+
             if let Some(sql) = sql {
                 session.sql(sql.as_str()).unwrap().show()
             } else {
                 readline(session, prompt)
             }
         }
-        Some(sub_cmd) => match sub_cmd {
-            // exec batch
-            SubCmd::File { file_path } => {
-                if let Some(file_path) = file_path {
-                    exec_batch_from_file(conf, &file_path);
+        Some(sub_cmd) => {
+            match sub_cmd {
+                // exec sql form file
+                SubCmd::File { file_path } => {
+                    if let Some(file_path) = file_path {
+                        exec_batch_from_file(conf, &file_path);
+                    }
                 }
+                SubCmd::Usage => print_usage_info(),
+                SubCmd::Update => update(),
+                SubCmd::Csv { .. } => {}
+                SubCmd::Load => {}
             }
-            SubCmd::Usage => {
-                print_usage_info();
-            }
-            SubCmd::Update => {
-                update();
-            }
-        },
+        }
     }
 }
 
@@ -100,7 +100,7 @@ fn readline(mut session: Session, prompt: String) {
         "{}\nAuthor: {}\nVersion: {} v{}\nUsage:\n{}\
         1. Print usage info: `?` or `help` \n{}\
         2. Exec system command on OS: `!ps`\n{}\
-        3. Exit: `exit` or `quit` or `Ctrl-C` or `Ctrl-D`",
+        3. Exit: `exit` or `quit` or `Ctrl-C` or `Ctrl-D`\n",
         ASCII_NAME, AUTHORS, PKG_NAME, VERSION, fore_space, fore_space, fore_space
     );
     let his_file: PathBuf = dirs::home_dir()
@@ -158,7 +158,7 @@ fn readline(mut session: Session, prompt: String) {
                         }
                     } else {
                         sql = format!("{}{}", tmp_sql, sql);
-                        println!("```sql\n{}\n```", sql);
+                        println!("```\n{}\n```", sql);
                         if let Ok(mut ds) = session.sql(sql.as_str()) {
                             ds.show()
                         }

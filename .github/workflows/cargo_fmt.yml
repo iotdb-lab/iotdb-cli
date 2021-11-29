@@ -14,5 +14,6 @@ jobs:
       - name: Install Rust
         run: rustup update stable && rustup default stable && rustup component add rustfmt
       - run: |
+          cargo fmt --all
           cargo fmt -- --check
           cargo clippy
