@@ -13,6 +13,7 @@
 [![Docs Build](https://img.shields.io/github/workflow/status/francis-du/iotdb-cli/mdbook-deploy?label=docs%20build&style=flat-square)](https://github.com/francis-du/iotdb-cli/actions?query=workflow:mdbook-deploy)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square&color=%23E5531A)](https://github.com/francis-du/iotdb-cli/blob/main/LICENSE)
 [![Crates Publish](https://img.shields.io/github/workflow/status/francis-du/iotdb-cli/cargo-publish?label=publish&style=flat-square)](https://github.com/francis-du/iotdb-cli/actions?query=workflow%3Acargo-publish)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ffrancis-du%2Fiotdb-cli.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ffrancis-du%2Fiotdb-cli?ref=badge_shield)
 
 </div>
 
@@ -173,3 +174,6 @@ $ iotdb usage
 # License
 
 [Apache License 2.0](LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ffrancis-du%2Fiotdb-cli.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ffrancis-du%2Fiotdb-cli?ref=badge_large)
