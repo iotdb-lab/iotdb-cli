@@ -1,4 +1,7 @@
+use crate::opt::Cli;
+
 mod cmd;
+mod common;
 mod opt;
 mod sub_cmd;
 
@@ -13,6 +16,14 @@ pub const ASCII_NAME: &str = "
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀\t
 ";
 
+/// Run IoTDB CLI
 fn main() {
-    cmd::run();
+    Cli::new().run();
+}
+
+pub fn slogan() -> String {
+    format!(
+        "{}\nAuthor: {}\nVersion: {} v{}",
+        ASCII_NAME, AUTHORS, PKG_NAME, VERSION,
+    )
 }

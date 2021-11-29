@@ -44,6 +44,12 @@ pub struct Cli {
     pub sub_cmd: Option<SubCmd>,
 }
 
+impl Cli {
+    pub fn new() -> Self {
+        Cli::from_args()
+    }
+}
+
 #[derive(Debug, Clone, StructOpt)]
 pub enum SubCmd {
     /// Execute batch form sql file, eg: `iotdb file ddl.sql`
@@ -66,10 +72,7 @@ pub enum SubCmd {
 
     /// Update binary(TODO)
     Update,
-}
 
-impl Cli {
-    pub fn new() -> Self {
-        Cli::from_args()
-    }
+    /// Prints version information
+    Version,
 }
