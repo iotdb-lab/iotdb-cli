@@ -48,7 +48,11 @@ impl Cli {
                     SubCmd::Update => sub_cmd.update(),
                     SubCmd::Csv { .. } => {}
                     SubCmd::Load => {}
-                    SubCmd::Version => println!("{}", slogan()),
+                    SubCmd::Version => {
+                        println!("{}", slogan());
+                        let mut session = common::get_session(self.session_conf());
+                        session.sql("show version").unwrap().show();
+                    }
                 }
             }
         }

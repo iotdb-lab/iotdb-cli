@@ -78,6 +78,6 @@ pub enum SubCmd {
     /// Update binary (TODO)
     Update,
 
-    /// Prints version information
+    /// Prints server version information
     Version,
 }
