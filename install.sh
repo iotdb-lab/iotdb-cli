@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC3003
 
 NO_COLOR=$'\e[0m'
 ERROR=$'\e[0;31m'"ERROR: "
@@ -17,10 +18,14 @@ set_version() {
       exit 1
     fi
 
-    if command -v curl &>/dev/null; then
+    if
+      command -v curl >/dev/null
+    then
       VERSION=$(curl -s ${LATEST_RELEASE} | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
     else
-      if command -v wget &>/dev/null; then
+      if
+        command -v wget >/dev/null
+      then
         VERSION=$(wget ${LATEST_RELEASE} | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
       else
         echo "${ERROR}Please install wget or curl${NO_COLOR}"
@@ -31,39 +36,20 @@ set_version() {
 }
 
 download() {
-  local url=$1
-  local file_name=$2
+  url=$1
+  file_name=$2
 
-  if command -v curl &>/dev/null; then
-    if [ -n $file_name ]; then
-      if [ ! -f $file_name ]; then
-        curl -L -f -# -C0 -o $file_name "$url"
-      else
-        command $file_name -h
-        echo "${WARN}'$file_name' exists"
-        echo "${WARN}Please run command 'iotdb' or '${file_name}'"
-        exit 1
-      fi
-    else
-      curl -L -f -# -OC0 "$url" --progress-bar
-    fi
+  if
+    command -v curl >/dev/null
+  then
+    curl -L -f -# -C0 -o "$file_name" "$url"
   else
-    if command -v wget &>/dev/null; then
-      command wget --spider -q "$url"
-      if [ $? == 0 ]; then
-        wget --spider -q "$url"
-        if [ -n $file_name ]; then
-          if [ ! -f $file_name ]; then
-            wget -q -c --show-progress "$url" -O $file_name
-          else
-            command $file_name -h
-            echo "${WARN}'$file_name' exists"
-            echo "${WARN}Please run command 'iotdb' or '${file_name}'"
-            exit 1
-          fi
-        else
-          wget -q -c --show-progress "$url"
-        fi
+    if
+      command -v wget >/dev/null
+    then
+      wget --spider -q "$url"
+      if [ $? = 0 ]; then
+        wget -q -c --show-progress "$url" -O "$file_name"
       else
         echo "${ERROR}Download failed from $url"
         exit 1
@@ -75,62 +61,155 @@ download() {
   fi
 }
 
-function install() {
+bin="iotdb"
+win_bin="iotdb.exe"
+install() {
   set_version
   echo "${INFO}Version: ${VERSION}"
   echo "${INFO}Latest release '${LATEST}'"
   asset_base_url="https://github.com/francis-du/iotdb-cli/releases/download/${VERSION}"
+
   case "$(uname -s)" in
   Linux*)
-    bin_name="${BIN_PATH}/iotdb"
     asset_url="$asset_base_url/iotdb-linux"
     echo "${INFO}Download from '${asset_url}'"
-    download $asset_url $bin_name
 
-    if [ -f "${bin_name}" ]; then
-      chmod +x $bin_name
-      echo "${INFO}Please run command 'iotdb' or '${bin_name}'"
+    if [ -w ${BIN_PATH} ] && [ -x ${BIN_PATH} ]; then
+      bin="${BIN_PATH}/$bin"
+      if [ -f $bin ]; then
+        command "$bin" -h
+        echo "${WARN}'$bin' exists"
+        echo "${WARN}Please run '$bin -h' to get help information"
+      else
+        download "$asset_url" "$bin"
+        if [ -f "$bin" ]; then
+          chmod +x $bin
+          echo "${WARN}Please run '$bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     else
-      echo "${ERROR}Install failed"
+      if [ -f $bin ]; then
+        command "./$bin" -h
+        echo "${WARN}'$bin' exists"
+        echo "${WARN}Please run './$bin -h' to get help information"
+      else
+        download "$asset_url" "$bin"
+        if [ -f "$bin" ]; then
+          chmod +x $bin
+          echo "${WARN}Please run './$bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     fi
     ;;
   Darwin*)
-    bin_name="${BIN_PATH}/iotdb"
     asset_url="${asset_base_url}/iotdb-mac"
     echo "${INFO}Download from '${asset_url}'"
-    download $asset_url $bin_name
 
-    if [ -f "${bin_name}" ]; then
-      chmod +x $bin_name
-      echo "${INFO}Please run command 'iotdb' or '${bin_name}'"
+    if [ -w ${BIN_PATH} ] && [ -x ${BIN_PATH} ]; then
+      bin="${BIN_PATH}/$bin"
+      if [ -f $bin ]; then
+        command "$bin" -h
+        echo "${WARN}'$bin' exists"
+        echo "${WARN}Please run '$bin -h' to get help information"
+      else
+        download "$asset_url" "$bin"
+        if [ -f "$bin" ]; then
+          chmod +x $bin
+          echo "${WARN}Please run '$bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     else
-      echo "${ERROR}Install failed"
+      if [ -f $bin ]; then
+        command "./$bin" -h
+        echo "${WARN}'$bin' exists"
+        echo "${WARN}Please run './$bin -h' to get help information"
+      else
+        download "$asset_url" "$bin"
+        if [ -f "$bin" ]; then
+          chmod +x $bin
+          echo "${WARN}Please run './$bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     fi
     ;;
   CYGWIN*)
     # TODO: Need to be test
-    bin_name="${BIN_PATH}/iotdb.exe"
     asset_url="$asset_base_url/iotdb.exe"
     echo "${INFO}Download from '${asset_url}'"
-    download $asset_url $bin_name
 
-    if [ -f "${bin_name}" ]; then
-      echo "${INFO}Please run command 'iotdb.exe' or '${bin_name}'"
+    if [ -w ${BIN_PATH} ] && [ -x ${BIN_PATH} ]; then
+      win_bin="${BIN_PATH}/$win_bin"
+      if [ -f $win_bin ]; then
+        command "$win_bin" -h
+        echo "${WARN}'$win_bin' exists"
+        echo "${WARN}Please run '$win_bin -h' to get help information"
+      else
+        download "$asset_url" "$win_bin"
+        if [ -f "$win_bin" ]; then
+          chmod +x $win_bin
+          echo "${WARN}Please run '$win_bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     else
-      echo "${ERROR}Install failed"
+      if [ -f $win_bin ]; then
+        command "./$win_bin" -h
+        echo "${WARN}'$win_bin' exists"
+        echo "${WARN}Please run './$win_bin -h' to get help information"
+      else
+        download "$asset_url" "$win_bin"
+        if [ -f "$win_bin" ]; then
+          chmod +x $win_bin
+          echo "${WARN}Please run './$win_bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     fi
     ;;
   MINGW*)
     # TODO: Need to be test
-    bin_name="${BIN_PATH}/iotdb.exe"
-    asset_url=$asset_base_url"/iotdb.exe"
+    asset_url="$asset_base_url/iotdb.exe"
     echo "${INFO}Download from '${asset_url}'"
-    download $asset_url $bin_name
 
-    if [ -f "${bin_name}" ]; then
-      echo "${INFO}Please run command 'iotdb.exe' or '${bin_name}'"
+    if [ -w ${BIN_PATH} ] && [ -x ${BIN_PATH} ]; then
+      win_bin="${BIN_PATH}/$win_bin"
+      if [ -f $win_bin ]; then
+        command "$win_bin" -h
+        echo "${WARN}'$win_bin' exists"
+        echo "${WARN}Please run '$win_bin -h' to get help information"
+      else
+        download "$asset_url" "$win_bin"
+        if [ -f "$win_bin" ]; then
+          chmod +x $win_bin
+          echo "${WARN}Please run '$win_bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     else
-      echo "${ERROR}Install failed"
+      if [ -f $win_bin ]; then
+        command "./$win_bin" -h
+        echo "${WARN}'$win_bin' exists"
+        echo "${WARN}Please run './$win_bin -h' to get help information"
+      else
+        download "$asset_url" "$win_bin"
+        if [ -f "$win_bin" ]; then
+          chmod +x $win_bin
+          echo "${WARN}Please run './$win_bin -h' to get help information"
+        else
+          echo "${ERROR}Install failed"
+        fi
+      fi
     fi
     ;;
   *)
