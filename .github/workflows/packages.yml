@@ -1,0 +1,20 @@
+name: Publish Package
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  push_to_registry:
+    name: Build Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: francis-du
+          password: ${{ secrets.DEPLOY_KEY }}
+          registry: docker.pkg.github.com
+          repository: francis-du/iotdb/iotdb-cli
+          tag_with_ref: true
