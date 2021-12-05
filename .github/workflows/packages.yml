@@ -19,8 +19,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DEPLOY_KEY }}
       - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: francis-du/iotdb-cli:latest
+        run: |
+          docker buildx build -t ghcr.io/francis-du/iotdb-cli:latest  .
+          docker push ghcr.io/francis-du/iotdb-cli:latest
