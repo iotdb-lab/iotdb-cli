@@ -18,4 +18,4 @@ jobs:
           rustc -Vv
           cargo -V
       - name: Publish to crates-io
-        run: cargo publish --token  ${{secrets.PUBLISH_KEY}} --verbose
+        run: cargo publish --token  ${{ secrets.PUBLISH_KEY }} --verbose
