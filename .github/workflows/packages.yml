@@ -1,4 +1,5 @@
-name: Publish Package
+name: docker-build
+
 on:
   push:
     branches: [ main ]
@@ -16,5 +17,5 @@ jobs:
           username: francis-du
           password: ${{ secrets.DEPLOY_KEY }}
           registry: docker.pkg.github.com
-          repository: francis-du/iotdb/iotdb-cli
+          repository: francis-du/iotdb-cli/iotdb-cli
           tag_with_ref: true
