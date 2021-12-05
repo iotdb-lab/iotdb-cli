@@ -1,5 +1,5 @@
 #!/bin/bash
-# docker buildx build -t apache/iotdb-cli:latest  .
+# docker build -t apache/iotdb-cli:latest  .
 
 FROM --platform=linux/amd64 rust as builder
 
