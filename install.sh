@@ -141,7 +141,6 @@ install() {
     fi
     ;;
   CYGWIN*)
-    # TODO: Need to be test
     asset_url="$asset_base_url/iotdb.exe"
     echo "${INFO}Download from '${asset_url}'"
 
@@ -177,7 +176,6 @@ install() {
     fi
     ;;
   MINGW*)
-    # TODO: Need to be test
     asset_url="$asset_base_url/iotdb.exe"
     echo "${INFO}Download from '${asset_url}'"
 
