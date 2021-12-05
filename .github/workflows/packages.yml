@@ -2,7 +2,7 @@ name: docker-build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main,test ]
 
 jobs:
   docker:
@@ -20,5 +20,6 @@ jobs:
           password: ${{ secrets.DEPLOY_KEY }}
       - name: Build and push
         run: |
+          pwd && ls -la
           docker build -t ghcr.io/francis-du/iotdb-cli:latest  .
           docker push ghcr.io/francis-du/iotdb-cli:latest
