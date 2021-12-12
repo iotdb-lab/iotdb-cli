@@ -1,5 +1,5 @@
-usage info:
-    ddl & dql:
+Usage:
+    DDL & DQL:
         01. `set storage group to root.ln`
         02. `show storage group` | `show storage group root.*`
         03. `delete storage group root.ln` | `delete storage group root.*`
@@ -18,7 +18,7 @@ usage info:
         16. `set ttl to root.ln 3600000`
         17. `unset ttl to root.ln`
         18. `show all ttl` | `show ttl on storagegroupnames`
-    dml:
+    DML:
         01. `insert into root.ln.wf02.wt02(timestamp,status) values(1,true)`
         02. `select temperature from root.ln.wf01.wt01 where time < 2017-11-01t00:08:00.000`
         03. `select s1, - s1, s2, + s2, s1 + s2, s1 - s2, s1 * s2, s1 / s2, s1 % s2 from root.sg.d1`
@@ -33,14 +33,14 @@ usage info:
         12. `delete from root.ln.wf02.wt02.status where time<=2017-11-01t16:26:00`
         13. `delete from root.ln.wf02.wt02 where time <= 2017-11-01t16:26:00`
         14. `delete partition root.ln 0,1,2`
-    other:
+    Other:
         01. `flush` | `flush root.ln`
         02. `merge` | `full merge`
         03. `clear cache`
         04. `set system to readonly`
         05. `create snapshot for schema`
         06. `kill query <queryid>`
-useful links:
+Useful links:
     01. what is iotdb: https://iotdb.apache.org/userguide/master/iotdb-introduction/what-is-iotdb.html
     02. sql guide: https://iotdb.apache.org/userguide/master/iotdb-sql-language/ddl-data-definition-language.html
     03. data concept: https://iotdb.apache.org/userguide/master/data-concept/data-model-and-terminology.html

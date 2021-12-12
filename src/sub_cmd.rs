@@ -4,8 +4,8 @@ use crate::VERSION;
 
 impl SubCmd {
     /// Print help info
-    pub fn usage(&self) {
-        common::print_usage();
+    pub fn help(&self) {
+        common::print_help();
     }
 
     #[allow(dead_code)]

@@ -55,7 +55,7 @@ impl Cli {
 }
 
 #[derive(Debug, Clone, StructOpt)]
-#[structopt(name = format ! ("{}\nAuthor: {}\nVersion: {}", ASCII_NAME, AUTHORS, PKG_NAME))]
+#[structopt(name = format!("{}\nAuthor: {}\nVersion: {}", ASCII_NAME, AUTHORS, PKG_NAME))]
 pub enum SubCmd {
     /// Execute batch form sql file, eg: `iotdb file ddl.sql`
     File { file_path: Option<String> },
@@ -72,12 +72,12 @@ pub enum SubCmd {
     /// Load TsFile util (TODO)
     Load,
 
-    /// Print usage info
+    /// Print usage
     Usage,
 
-    /// Update binary (TODO)
+    /// Self update(TODO)
     Update,
 
-    /// Prints server version information
+    /// Prints server version info
     Version,
 }

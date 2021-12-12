@@ -62,7 +62,7 @@ pub fn sql_file_reader(file_path: &str) -> Vec<String> {
     }
 }
 
-pub fn print_usage() {
-    let help_info = include_str!("static/usage_info");
+pub fn print_help() {
+    let help_info = include_str!("static/help_info");
     println!("{}", help_info);
 }

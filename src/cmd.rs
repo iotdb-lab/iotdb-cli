@@ -44,7 +44,7 @@ impl Cli {
                             common::exec_batch_from_file(conf, file);
                         }
                     }
-                    SubCmd::Usage => sub_cmd.usage(),
+                    SubCmd::Usage => sub_cmd.help(),
                     SubCmd::Update => sub_cmd.update(),
                     SubCmd::Csv { .. } => {}
                     SubCmd::Load => {}
@@ -146,7 +146,7 @@ impl Cli {
         let fore_space = "    ";
         format!(
             "Usage:\n{}\
-        1. Print usage info: `?` or `help` \n{}\
+        1. Print help info: `?` or `help` \n{}\
         2. Exec system command on local machine, eg: `!ps -ef`\n{}\
         3. Exit: `exit` or `quit` or `Ctrl-C` or `Ctrl-D`\n",
             fore_space, fore_space, fore_space
@@ -155,7 +155,7 @@ impl Cli {
 
     /// Print help info
     pub fn help(&self) {
-        common::print_usage();
+        common::print_help();
     }
 
     /// readline
