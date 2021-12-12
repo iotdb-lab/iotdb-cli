@@ -7,7 +7,7 @@ pub struct Cli {
     /// Execute single sql, eg: `iotdb "show storage group"`
     pub sql: Option<String>,
 
-    /// Dev server
+    /// Connect to dev server
     #[structopt(long)]
     pub dev: bool,
 

@@ -12,5 +12,3 @@ RUN cargo build --release --bin iotdb
 FROM apache/iotdb as runtime
 
 COPY --from=builder /iotdb-cli/target/release/iotdb /usr/local/bin
-
-CMD ["/usr/local/bin/iotdb"]

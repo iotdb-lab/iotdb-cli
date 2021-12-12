@@ -5,8 +5,8 @@ NO_COLOR=$'\e[0m'
 ERROR=$'\e[0;31m'"ERROR: "
 INFO=$'\e[0;32m'"INFO: "
 WARN=$'\e[0;33m'"WARN: "
-LATEST="https://github.com/francis-du/iotdb-cli/releases/latest"
-LATEST_RELEASE="https://api.github.com/repos/francis-du/iotdb-cli/releases/latest"
+LATEST="https://github.com/iotdb-lab/iotdb-cli/releases/latest"
+LATEST_RELEASE="https://api.github.com/repos/iotdb-lab/iotdb-cli/releases/latest"
 BIN_PATH="/usr/local/bin"
 VERSION=$1
 
@@ -67,7 +67,7 @@ install() {
   set_version
   echo "${INFO}Version: ${VERSION}"
   echo "${INFO}Latest release '${LATEST}'"
-  asset_base_url="https://github.com/francis-du/iotdb-cli/releases/download/${VERSION}"
+  asset_base_url="https://github.com/iotdb-lab/iotdb-cli/releases/download/${VERSION}"
 
   case "$(uname -s)" in
   Linux*)
