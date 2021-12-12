@@ -20,6 +20,13 @@
 
 [![Alt](https://repobeats.axiom.co/api/embed/86055cf67fcaac9e6e93c64c9a7a1630686ceda1.svg "Repobeats analytics image")](https://github.com/iotdb-lab/iotdb-cli/pulse)
 
+## Docker
+
+```shell
+docker run --name iotdb-cli -d ghcr.io/iotdb-lab/iotdb-cli
+docker exec -it iotdb-cli iotdb
+```
+
 ## Installation
 
 [![Linux supported](https://img.shields.io/badge/Linux%20x86__64-supported%20✓-228B22?style=flat-square&logo=linux)](https://github.com/iotdb-lab/iotdb-cli/releases/latest)
