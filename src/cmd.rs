@@ -4,13 +4,14 @@ use crate::slogan;
 use iotdb::{Config, ConfigBuilder, Endpoint, Session};
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
+use simplelog::LevelFilter;
 use std::io;
 use std::io::Write;
 use std::path::PathBuf;
 use std::process::{Command, Output, Stdio};
 
 impl Cli {
-    pub fn run(&self) {
+    pub fn run(&self) -> anyhow::Result<()> {
         let Cli {
             sql, file, sub_cmd, ..
         } = self;
@@ -19,7 +20,7 @@ impl Cli {
 
         // exec batch
         if let Some(file_path) = file {
-            common::exec_batch_from_file(conf, file_path.as_str());
+            common::exec_batch_from_file(conf, file_path.as_str())?;
             std::process::exit(0);
         }
 
@@ -28,10 +29,10 @@ impl Cli {
             None => {
                 // open session
                 let prompt = format!("IOTDB#({})> ", conf.endpoint.to_string());
-                let mut session = common::get_session(conf);
+                let mut session = Session::connect(conf)?;
 
                 if let Some(sql) = sql {
-                    session.sql(sql.as_str()).unwrap().show()
+                    session.sql(sql.as_str())?.show()
                 } else {
                     self.readline(session, prompt)
                 }
@@ -41,7 +42,7 @@ impl Cli {
                     // exec sql form file
                     SubCmd::File { file_path } => {
                         if let Some(file) = file_path {
-                            common::exec_batch_from_file(conf, file);
+                            common::exec_batch_from_file(conf, file)?;
                         }
                     }
                     SubCmd::Usage => sub_cmd.help(),
@@ -50,12 +51,14 @@ impl Cli {
                     SubCmd::Load => {}
                     SubCmd::Version => {
                         println!("{}", slogan());
-                        let mut session = common::get_session(self.session_conf());
-                        session.sql("show version").unwrap().show();
+                        let mut session = Session::connect(self.session_conf())?;
+                        session.sql("show version")?.show();
                     }
                 }
             }
         }
+
+        Ok(())
     }
 
     /// Set session conf
@@ -80,7 +83,11 @@ impl Cli {
         }
 
         // enable debug mode
-        builder.debug(*debug);
+        if *debug {
+            common::logger(LevelFilter::Debug);
+        } else {
+            common::logger(LevelFilter::Info);
+        }
 
         // user and password
         if let Some(user) = user {
@@ -92,15 +99,15 @@ impl Cli {
 
         // set endpoint
         if host.is_some() && port.is_some() {
-            builder.endpoint(
+            builder.host_port(
                 host.as_ref().unwrap().as_str(),
                 port.as_ref().unwrap().as_str(),
             );
         } else if let Some(endpoint) = endpoint {
             let endpoint = endpoint.as_str().parse::<Endpoint>().unwrap();
-            builder.endpoint(endpoint.host.as_str(), endpoint.port.as_str());
+            builder.endpoint(endpoint.host.as_str());
         } else if *dev {
-            builder.endpoint("119.84.128.59", "6667");
+            builder.endpoint("119.84.128.59:6667");
         }
 
         builder.build()
@@ -174,9 +181,6 @@ impl Cli {
         let mut max_str_len = 0;
         loop {
             // TODO: is_open is invalid and needs to be fixed in iotdb-rs
-            if session.is_close() {
-                session = session.open().unwrap();
-            }
             let readline;
             if !tmp_sql.is_empty() {
                 readline = rl.readline(">> ");

@@ -1,4 +1,4 @@
-Usage:
+Usage info:
     DDL & DQL:
         01. `set storage group to root.ln`
         02. `show storage group` | `show storage group root.*`
@@ -17,7 +17,7 @@ Usage:
         15. `unset schema template temp1 from root.beijing`
         16. `set ttl to root.ln 3600000`
         17. `unset ttl to root.ln`
-        18. `show all ttl` | `show ttl on storagegroupnames`
+        18. `show all ttl` | `show ttl on storage group names`
     DML:
         01. `insert into root.ln.wf02.wt02(timestamp,status) values(1,true)`
         02. `select temperature from root.ln.wf01.wt01 where time < 2017-11-01t00:08:00.000`
@@ -41,9 +41,9 @@ Usage:
         05. `create snapshot for schema`
         06. `kill query <queryid>`
 Useful links:
-    01. what is iotdb: https://iotdb.apache.org/userguide/master/iotdb-introduction/what-is-iotdb.html
-    02. sql guide: https://iotdb.apache.org/userguide/master/iotdb-sql-language/ddl-data-definition-language.html
-    03. data concept: https://iotdb.apache.org/userguide/master/data-concept/data-model-and-terminology.html
-    04. advanced features: https://iotdb.apache.org/userguide/master/advanced-features/udf-user-defined-function.html
-    04. about iotdb-rs: https://github.com/francis-du/iotdb-rs
-    05. about iotdb-cli: https://github.com/francis-du/iotdb-cli
+    01. What is iotdb: https://iotdb.apache.org/userguide/master/iotdb-introduction/what-is-iotdb.html
+    02. Sql guide: https://iotdb.apache.org/userguide/master/iotdb-sql-language/ddl-data-definition-language.html
+    03. Data concept: https://iotdb.apache.org/userguide/master/data-concept/data-model-and-terminology.html
+    04. Advanced features: https://iotdb.apache.org/userguide/master/advanced-features/udf-user-defined-function.html
+    04. About iotdb-rs: https://github.com/francis-du/iotdb-rs
+    05. About iotdb-cli: https://github.com/francis-du/iotdb-cli

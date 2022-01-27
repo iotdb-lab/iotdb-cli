@@ -1,28 +1,36 @@
 use iotdb::{Config, Session};
+use simplelog::LevelFilter;
 use std::io::BufRead;
 use std::path::Path;
 use std::{fs, io};
 
 // Exec batch from sql file
-pub fn exec_batch_from_file(conf: Config, file_path: &str) {
+pub fn exec_batch_from_file(conf: Config, file_path: &str) -> anyhow::Result<()> {
     let file = Path::new(&file_path);
-    let mut session = get_session(conf);
+    let mut session = Session::connect(conf)?;
     if file.exists() {
         if !file.is_file() || !file_path.ends_with(".sql") {
             println!("ERROR: {:?} is not a sql file", file_path);
         } else {
             println!("Statements: {:#?}", sql_file_reader(file_path));
-            session.exec_batch(sql_file_reader(file_path));
-            session.close().unwrap();
+            session.exec_batch(sql_file_reader(file_path))?;
+            session.close()?;
         }
     } else {
         println!("ERROR: {:?} not exist", file_path);
     }
+    Ok(())
 }
 
-/// Open a IoTDB session
-pub fn get_session(conf: Config) -> Session {
-    Session::new(conf).open().unwrap()
+/// Logger
+pub fn logger(level: LevelFilter) {
+    use simplelog::*;
+    let _ = CombinedLogger::init(vec![TermLogger::new(
+        level,
+        Default::default(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )]);
 }
 
 /// SQL file reader

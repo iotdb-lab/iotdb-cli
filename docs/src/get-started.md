@@ -70,14 +70,14 @@ iotdb -h
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
 Author: github.com/francis-du <me@francis.run>
-Version: iotdb-cli 0.0.3-alpha
+Version: iotdb-cli 0.0.3
 
 USAGE:
     iotdb [FLAGS] [OPTIONS] [sql] [SUBCOMMAND]
 
 FLAGS:
     -d, --debug      Enable debug mode
-        --dev        Connect to dev server
+        --dev        Dev server
     -h, --help       Prints help information
     -V, --version    Prints version information
 
@@ -98,9 +98,9 @@ SUBCOMMANDS:
     file       Execute batch form sql file, eg: `iotdb file ddl.sql`
     help       Prints this message or the help of the given subcommand(s)
     load       Load TsFile util (TODO)
-    update     Self update(TODO)
-    usage      Print usage
-    version    Prints server version info
+    update     Update binary (TODO)
+    usage      Print usage info
+    version    Prints server version information
 ```
 
 1. Connect to IoTDB server
@@ -138,8 +138,8 @@ $ iotdb -u root -p root --e 127.0.0.1:6667 -t UTC+8
  ██  ▀█▄     ██    ██     ██    ██  ██    ██
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
-Author: github.com/iotdb-lab <me@francis.run>
-Version: iotdb-cli v0.0.2
+Author: github.com/francis-du <me@francis.run>
+Version: iotdb-cli v0.0.3
 Usage:
     1. Print usage info: `?` or `help` 
     2. Exec system command on OS: `!ps`

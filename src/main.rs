@@ -3,7 +3,7 @@ use crate::opt::Cli;
 mod cmd;
 mod common;
 mod opt;
-mod sub_cmd;
+mod sub_opt;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
@@ -17,8 +17,9 @@ pub const ASCII_NAME: &str = "
 ";
 
 /// Run IoTDB CLI
-fn main() {
-    Cli::new().run();
+fn main() -> anyhow::Result<()> {
+    Cli::new().run()?;
+    Ok(())
 }
 
 pub fn slogan() -> String {
