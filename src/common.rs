@@ -1,5 +1,5 @@
 use iotdb::{Config, Session};
-use log::error;
+use log::{error, info};
 use simplelog::LevelFilter;
 use std::io::BufRead;
 use std::path::Path;
@@ -19,10 +19,17 @@ pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
         .collect();
 
     if sql_vec.len() > 1 {
-        session.exec_batch(sql_vec)?;
+        match session.exec_batch(sql_vec.clone()) {
+            Ok(_) => info!("SQL: {:#?} execution succeed", sql_vec),
+            Err(error) => error!("{}", error),
+        }
     } else {
-        session.sql(sql_vec[0].as_str())?.show();
+        match session.sql(sql_vec[0].as_str()) {
+            Ok(mut ds) => ds.show(),
+            Err(error) => error!("{}", error),
+        }
     }
+
     Ok(())
 }
 

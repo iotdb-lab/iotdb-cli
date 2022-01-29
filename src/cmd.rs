@@ -218,6 +218,7 @@ impl Cli {
                             if sql.eq(";") {
                                 continue;
                             }
+                            rl.add_history_entry(sql.clone().as_str());
                             common::show_exec_sql_from_str(conf.clone(), sql.clone())?;
                         } else {
                             sql = format!("{}{}", tmp_sql, sql);
@@ -227,12 +228,12 @@ impl Cli {
                                 split_line.push('+')
                             }
                             println!("{}\n{}\n{}", split_line, sql, split_line);
+                            rl.add_history_entry(sql.clone().as_str());
                             common::show_exec_sql_from_str(conf.clone(), sql.clone())?;
 
                             tmp_sql.clear();
                             max_str_len = 0;
                         }
-                        rl.add_history_entry(sql.clone().as_str());
                     } else {
                         tmp_sql.push_str(sql.trim());
                         tmp_sql.push('\n');
