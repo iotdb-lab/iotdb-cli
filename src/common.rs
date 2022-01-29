@@ -41,7 +41,7 @@ pub fn exec_batch_from_file(conf: Config, file_path: &str) -> anyhow::Result<()>
         if !file.is_file() || !file_path.ends_with(".sql") {
             error!(" {:?} is not a sql file", file_path);
         } else {
-            error!("Statements: {:#?}", sql_file_reader(file_path));
+            info!("Statements: {:#?}", sql_file_reader(file_path));
             session.exec_batch(sql_file_reader(file_path))?;
             session.close()?;
         }
