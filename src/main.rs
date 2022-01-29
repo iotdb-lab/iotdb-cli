@@ -3,7 +3,7 @@ use crate::opt::Cli;
 mod cmd;
 mod common;
 mod opt;
-mod sub_opt;
+mod sub_cmd;
 
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");

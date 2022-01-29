@@ -34,7 +34,7 @@ impl Cli {
                 if let Some(sql) = sql {
                     session.sql(sql.as_str())?.show()
                 } else {
-                    self.readline(session, prompt)
+                    self.readline(session, prompt)?
                 }
             }
             Some(sub_cmd) => {
@@ -114,7 +114,7 @@ impl Cli {
     }
 
     /// Exec shell command
-    fn exec_shell_cmd(&self, cmd_str: String) {
+    fn exec_shell_cmd(&self, cmd_str: String) -> anyhow::Result<()> {
         let mut cmd_str = cmd_str;
         if cfg!(target_os = "windows") {
             cmd_str = "dir C:\\tmp".to_string();
@@ -127,7 +127,7 @@ impl Cli {
                 .stdout(Stdio::piped())
                 .output()
                 .expect("cmd exec error!");
-            self.output_to_stdout(output);
+            self.output_to_stdout(output)?;
         } else {
             let output = Command::new("sh")
                 .arg("-c")
@@ -135,17 +135,19 @@ impl Cli {
                 .stdout(Stdio::piped())
                 .output()
                 .expect("sh exec error!");
-            self.output_to_stdout(output);
+            self.output_to_stdout(output)?;
         };
+        Ok(())
     }
 
     /// Command output to stdout
-    fn output_to_stdout(&self, output: Output) {
+    fn output_to_stdout(&self, output: Output) -> anyhow::Result<()> {
         if output.status.success() {
-            io::stdout().write_all(&output.stdout).unwrap();
+            io::stdout().write_all(&output.stdout)?;
         } else {
-            io::stdout().write_all(&output.stderr).unwrap();
+            io::stdout().write_all(&output.stderr)?;
         }
+        Ok(())
     }
 
     /// Usage info
@@ -166,7 +168,7 @@ impl Cli {
     }
 
     /// readline
-    fn readline(&self, mut session: Session, prompt: String) {
+    fn readline(&self, mut session: Session, prompt: String) -> anyhow::Result<()> {
         println!("{}\n{}", slogan(), self.cli_usage());
         let his_file: PathBuf = dirs::home_dir()
             .unwrap_or_else(|| PathBuf::from("/home"))
@@ -174,7 +176,7 @@ impl Cli {
 
         let mut rl = Editor::<()>::new();
         if his_file.as_path().exists() {
-            rl.load_history(his_file.as_path()).unwrap();
+            rl.load_history(his_file.as_path())?;
         }
 
         let mut tmp_sql: String = String::new();
@@ -191,9 +193,9 @@ impl Cli {
             match readline {
                 Ok(mut sql) => {
                     if sql.contains("exit") || sql.contains("quit") {
-                        session.close().unwrap();
+                        session.close()?;
                         rl.add_history_entry(sql.as_str());
-                        rl.save_history(his_file.as_path()).unwrap();
+                        rl.save_history(his_file.as_path())?;
                         break;
                     }
 
@@ -210,7 +212,7 @@ impl Cli {
                     if sql.starts_with('!') {
                         rl.add_history_entry(sql.as_str());
                         sql.remove(0);
-                        self.exec_shell_cmd(sql);
+                        self.exec_shell_cmd(sql)?;
                         continue;
                     }
 
@@ -246,22 +248,23 @@ impl Cli {
                     }
                 }
                 Err(ReadlineError::Interrupted) => {
-                    session.close().unwrap();
+                    session.close()?;
                     println!("Ctrl-C");
                     break;
                 }
                 Err(ReadlineError::Eof) => {
-                    session.close().unwrap();
+                    session.close()?;
                     println!("Ctrl-D");
                     break;
                 }
                 Err(err) => {
-                    session.close().unwrap();
+                    session.close()?;
                     println!("Error: {:?}", err);
                     break;
                 }
             }
-            rl.save_history(his_file.as_path()).unwrap();
+            rl.save_history(his_file.as_path())?;
         }
+        Ok(())
     }
 }

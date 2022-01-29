@@ -37,13 +37,14 @@ Usage info:
         01. `flush` | `flush root.ln`
         02. `merge` | `full merge`
         03. `clear cache`
-        04. `set system to readonly`
+        04. `set system to readonly`?
+
         05. `create snapshot for schema`
         06. `kill query <queryid>`
 Useful links:
-    01. What is iotdb: https://iotdb.apache.org/userguide/master/iotdb-introduction/what-is-iotdb.html
-    02. Sql guide: https://iotdb.apache.org/userguide/master/iotdb-sql-language/ddl-data-definition-language.html
-    03. Data concept: https://iotdb.apache.org/userguide/master/data-concept/data-model-and-terminology.html
-    04. Advanced features: https://iotdb.apache.org/userguide/master/advanced-features/udf-user-defined-function.html
-    04. About iotdb-rs: https://github.com/francis-du/iotdb-rs
-    05. About iotdb-cli: https://github.com/francis-du/iotdb-cli
+    01. About iotdb-rs: https://github.com/francis-du/iotdb-rs
+    02. About iotdb-cli: https://github.com/francis-du/iotdb-cli
+    03. What is IoTDB: https://iotdb.apache.org/UserGuide/Master/IoTDB-Introduction/What-is-IoTDB.html
+    04. SQL: https://iotdb.apache.org/UserGuide/V0.13.x/Query-Data/Overview.html#syntax-definition
+    05. Data-Concept: https://iotdb.apache.org/UserGuide/V0.13.x/Data-Concept/Data-Model-and-Terminology.html
+    06. Process Data: https://iotdb.apache.org/UserGuide/V0.13.x/Process-Data/UDF-User-Defined-Function.html#udf-types
