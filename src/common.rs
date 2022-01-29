@@ -1,8 +1,30 @@
 use iotdb::{Config, Session};
+use log::error;
 use simplelog::LevelFilter;
 use std::io::BufRead;
 use std::path::Path;
 use std::{fs, io};
+
+// Exec batch from sql str
+pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
+    let mut session = Session::connect(conf)?;
+
+    let sql_vec: Vec<String> = sql
+        .trim()
+        .split(';')
+        .map(|x| x.trim())
+        .filter(|x| !x.is_empty())
+        .filter(|x| !x.starts_with("--"))
+        .map(|x| x.replace("\n", " "))
+        .collect();
+
+    if sql_vec.len() > 1 {
+        session.exec_batch(sql_vec)?;
+    } else {
+        session.sql(sql_vec[0].as_str())?.show();
+    }
+    Ok(())
+}
 
 // Exec batch from sql file
 pub fn exec_batch_from_file(conf: Config, file_path: &str) -> anyhow::Result<()> {
@@ -10,27 +32,16 @@ pub fn exec_batch_from_file(conf: Config, file_path: &str) -> anyhow::Result<()>
     let mut session = Session::connect(conf)?;
     if file.exists() {
         if !file.is_file() || !file_path.ends_with(".sql") {
-            println!("ERROR: {:?} is not a sql file", file_path);
+            error!(" {:?} is not a sql file", file_path);
         } else {
-            println!("Statements: {:#?}", sql_file_reader(file_path));
+            error!("Statements: {:#?}", sql_file_reader(file_path));
             session.exec_batch(sql_file_reader(file_path))?;
             session.close()?;
         }
     } else {
-        println!("ERROR: {:?} not exist", file_path);
+        error!("{:?} not exist", file_path);
     }
     Ok(())
-}
-
-/// Logger
-pub fn logger(level: LevelFilter) {
-    use simplelog::*;
-    let _ = CombinedLogger::init(vec![TermLogger::new(
-        level,
-        Default::default(),
-        TerminalMode::Mixed,
-        ColorChoice::Auto,
-    )]);
 }
 
 /// SQL file reader
@@ -64,10 +75,21 @@ pub fn sql_file_reader(file_path: &str) -> Vec<String> {
             batch_sql
         }
         Err(error) => {
-            println!("ERROR: {:?}", error);
+            error!("ERROR: {:?}", error);
             vec![]
         }
     }
+}
+
+/// Logger
+pub fn logger(level: LevelFilter) {
+    use simplelog::*;
+    let _ = CombinedLogger::init(vec![TermLogger::new(
+        level,
+        Default::default(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )]);
 }
 
 pub fn print_help() {

@@ -27,14 +27,10 @@ impl Cli {
         // sub command
         match sub_cmd {
             None => {
-                // open session
-                let prompt = format!("IOTDB#({})> ", conf.endpoint.to_string());
-                let mut session = Session::connect(conf)?;
-
                 if let Some(sql) = sql {
-                    session.sql(sql.as_str())?.show()
+                    Session::connect(conf)?.sql(sql.as_str())?.show();
                 } else {
-                    self.readline(session, prompt)?
+                    self.readline(conf)?;
                 }
             }
             Some(sub_cmd) => {
@@ -168,8 +164,10 @@ impl Cli {
     }
 
     /// readline
-    fn readline(&self, mut session: Session, prompt: String) -> anyhow::Result<()> {
+    fn readline(&self, conf: Config) -> anyhow::Result<()> {
         println!("{}\n{}", slogan(), self.cli_usage());
+        let prompt = format!("IOTDB#({})> ", conf.endpoint.to_string());
+
         let his_file: PathBuf = dirs::home_dir()
             .unwrap_or_else(|| PathBuf::from("/home"))
             .join(".iotdb_his");
@@ -180,7 +178,7 @@ impl Cli {
         }
 
         let mut tmp_sql: String = String::new();
-        let mut max_str_len = 0;
+        let mut max_str_len: usize = 0;
         loop {
             // TODO: is_open is invalid and needs to be fixed in iotdb-rs
             let readline;
@@ -192,15 +190,10 @@ impl Cli {
 
             match readline {
                 Ok(mut sql) => {
-                    if sql.contains("exit") || sql.contains("quit") {
-                        session.close()?;
+                    if sql.starts_with("exit") || sql.starts_with("quit") {
                         rl.add_history_entry(sql.as_str());
                         rl.save_history(his_file.as_path())?;
                         break;
-                    }
-
-                    if sql.trim().is_empty() {
-                        continue;
                     }
 
                     if sql.eq("?") || sql.eq("help") {
@@ -216,11 +209,16 @@ impl Cli {
                         continue;
                     }
 
+                    if sql.trim().is_empty() {
+                        continue;
+                    }
+
                     if sql.ends_with(';') {
                         if tmp_sql.is_empty() {
-                            if let Ok(mut ds) = session.sql(sql.as_str()) {
-                                ds.show()
+                            if sql.eq(";") {
+                                continue;
                             }
+                            common::show_exec_sql_from_str(conf.clone(), sql.clone())?;
                         } else {
                             sql = format!("{}{}", tmp_sql, sql);
 
@@ -229,36 +227,39 @@ impl Cli {
                                 split_line.push('+')
                             }
                             println!("{}\n{}\n{}", split_line, sql, split_line);
-
-                            if let Ok(mut ds) = session.sql(sql.as_str()) {
-                                ds.show()
-                            }
+                            common::show_exec_sql_from_str(conf.clone(), sql.clone())?;
 
                             tmp_sql.clear();
                             max_str_len = 0;
                         }
-                        rl.add_history_entry(sql.as_str());
+                        rl.add_history_entry(sql.clone().as_str());
                     } else {
                         tmp_sql.push_str(sql.trim());
                         tmp_sql.push('\n');
 
-                        if sql.len() > max_str_len {
-                            max_str_len = sql.len();
+                        max_str_len = match sql
+                            .split('\n')
+                            .collect::<Vec<&str>>()
+                            .iter()
+                            .map(|x| x.len())
+                            .collect::<Vec<usize>>()
+                            .iter()
+                            .max()
+                        {
+                            None => sql.len(),
+                            Some(len) => *len,
                         }
                     }
                 }
                 Err(ReadlineError::Interrupted) => {
-                    session.close()?;
                     println!("Ctrl-C");
                     break;
                 }
                 Err(ReadlineError::Eof) => {
-                    session.close()?;
                     println!("Ctrl-D");
                     break;
                 }
                 Err(err) => {
-                    session.close()?;
                     println!("Error: {:?}", err);
                     break;
                 }
