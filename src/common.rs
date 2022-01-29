@@ -20,7 +20,7 @@ pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
 
     if sql_vec.len() > 1 {
         match session.exec_batch(sql_vec.clone()) {
-            Ok(_) => info!("SQL: {:#?} execution succeed", sql_vec),
+            Ok(_) => info!("SQL: {:#?} Execute batch statements successfully", sql_vec),
             Err(error) => error!("{}", error),
         }
     } else {
