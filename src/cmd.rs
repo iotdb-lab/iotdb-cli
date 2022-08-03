@@ -184,7 +184,7 @@ impl Cli {
             // TODO: is_open is invalid and needs to be fixed in iotdb-rs
             let readline;
             if !tmp_sql.is_empty() {
-                readline = rl.readline(">> ");
+                readline = rl.readline(".../ ");
             } else {
                 readline = rl.readline(prompt.as_str());
             }
