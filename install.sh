@@ -78,13 +78,13 @@ install() {
       bin="${BIN_PATH}/$bin"
       if [ -f $bin ]; then
         command "$bin" -h
-        echo "${WARN}'$bin' exists"
-        echo "${WARN}Please run '$bin -h' to get help information"
+        echo "${WARN}'`pwd`/$bin' exists"
+        echo "${WARN}Please run '$bin -h' to get help"
       else
         download "$asset_url" "$bin"
         if [ -f "$bin" ]; then
           chmod +x $bin
-          echo "${WARN}Please run '$bin -h' to get help information"
+          echo "${WARN}Please run '$bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
@@ -92,13 +92,14 @@ install() {
     else
       if [ -f $bin ]; then
         command "./$bin" -h
-        echo "${WARN}'$bin' exists"
-        echo "${WARN}Please run './$bin -h' to get help information"
+        echo "${WARN}'`pwd`/$bin' exists"
+        echo "${WARN}Please run './$bin -h' to get help"
       else
         download "$asset_url" "$bin"
+        echo "${WARN}'${BIN_PATH}' not exists，please add 'iotdb' bin file to 'PATH'"
         if [ -f "$bin" ]; then
           chmod +x $bin
-          echo "${WARN}Please run './$bin -h' to get help information"
+          echo "${WARN}Please run './$bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
@@ -108,18 +109,18 @@ install() {
   Darwin*)
     asset_url="${asset_base_url}/iotdb-mac"
     echo "${INFO}Download from '${asset_url}'"
-
+    
     if [ -w ${BIN_PATH} ] && [ -x ${BIN_PATH} ]; then
       bin="${BIN_PATH}/$bin"
       if [ -f $bin ]; then
         command "$bin" -h
         echo "${WARN}'$bin' exists"
-        echo "${WARN}Please run '$bin -h' to get help information"
+        echo "${WARN}Please run '$bin -h' to get help"
       else
         download "$asset_url" "$bin"
         if [ -f "$bin" ]; then
           chmod +x $bin
-          echo "${WARN}Please run '$bin -h' to get help information"
+          echo "${WARN}Please run '$bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
@@ -127,13 +128,14 @@ install() {
     else
       if [ -f $bin ]; then
         command "./$bin" -h
-        echo "${WARN}'$bin' exists"
-        echo "${WARN}Please run './$bin -h' to get help information"
+        echo "${WARN}'`pwd`/$bin' exists"
+        echo "${WARN}Please run './$bin -h' to get help"
       else
         download "$asset_url" "$bin"
+        echo "${WARN}'${BIN_PATH}' not exists，please add 'iotdb' bin file to 'PATH'"
         if [ -f "$bin" ]; then
           chmod +x $bin
-          echo "${WARN}Please run './$bin -h' to get help information"
+          echo "${WARN}Please run './$bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
@@ -148,13 +150,13 @@ install() {
       win_bin="${BIN_PATH}/$win_bin"
       if [ -f $win_bin ]; then
         command "$win_bin" -h
-        echo "${WARN}'$win_bin' exists"
-        echo "${WARN}Please run '$win_bin -h' to get help information"
+        echo "${WARN}'`pwd`/$bin' exists"
+        echo "${WARN}Please run '$win_bin -h' to get help"
       else
         download "$asset_url" "$win_bin"
         if [ -f "$win_bin" ]; then
           chmod +x $win_bin
-          echo "${WARN}Please run '$win_bin -h' to get help information"
+          echo "${WARN}Please run '$win_bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
@@ -162,13 +164,14 @@ install() {
     else
       if [ -f $win_bin ]; then
         command "./$win_bin" -h
-        echo "${WARN}'$win_bin' exists"
-        echo "${WARN}Please run './$win_bin -h' to get help information"
+        echo "${WARN}'`pwd`/$bin' exists"
+        echo "${WARN}Please run './$win_bin -h' to get help"
       else
         download "$asset_url" "$win_bin"
+        echo "${WARN}'${BIN_PATH}' not exists，please add 'iotdb' bin file to 'PATH'"
         if [ -f "$win_bin" ]; then
           chmod +x $win_bin
-          echo "${WARN}Please run './$win_bin -h' to get help information"
+          echo "${WARN}Please run './$win_bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
@@ -183,13 +186,13 @@ install() {
       win_bin="${BIN_PATH}/$win_bin"
       if [ -f $win_bin ]; then
         command "$win_bin" -h
-        echo "${WARN}'$win_bin' exists"
-        echo "${WARN}Please run '$win_bin -h' to get help information"
+        echo "${WARN}'`pwd`/$bin' exists"
+        echo "${WARN}Please run '$win_bin -h' to get help"
       else
         download "$asset_url" "$win_bin"
         if [ -f "$win_bin" ]; then
           chmod +x $win_bin
-          echo "${WARN}Please run '$win_bin -h' to get help information"
+          echo "${WARN}Please run '$win_bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
@@ -197,13 +200,14 @@ install() {
     else
       if [ -f $win_bin ]; then
         command "./$win_bin" -h
-        echo "${WARN}'$win_bin' exists"
-        echo "${WARN}Please run './$win_bin -h' to get help information"
+        echo "${WARN}'`pwd`/$bin' exists"
+        echo "${WARN}Please run './$win_bin -h' to get help"
       else
         download "$asset_url" "$win_bin"
+        echo "${WARN}'${BIN_PATH}' not exists，please add 'iotdb' bin file to 'PATH'"
         if [ -f "$win_bin" ]; then
           chmod +x $win_bin
-          echo "${WARN}Please run './$win_bin -h' to get help information"
+          echo "${WARN}Please run './$win_bin -h' to get help"
         else
           echo "${ERROR}Install failed"
         fi
