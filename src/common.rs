@@ -5,7 +5,7 @@ use std::io::BufRead;
 use std::path::Path;
 use std::{fs, io};
 
-// Exec batch from sql str
+/// Exec batch from sql str
 pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
     let mut session = Session::connect(conf)?;
 
@@ -29,11 +29,12 @@ pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
             Err(error) => error!("{}", error),
         }
     }
+    session.close()?;
 
     Ok(())
 }
 
-// Exec batch from sql file
+/// Exec batch from sql file
 pub fn exec_batch_from_file(conf: Config, file_path: &str) -> anyhow::Result<()> {
     let file = Path::new(&file_path);
     let mut session = Session::connect(conf)?;
@@ -48,6 +49,7 @@ pub fn exec_batch_from_file(conf: Config, file_path: &str) -> anyhow::Result<()>
     } else {
         error!("{:?} not exist", file_path);
     }
+    session.close()?;
     Ok(())
 }
 

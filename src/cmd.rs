@@ -170,7 +170,7 @@ impl Cli {
 
         let his_file: PathBuf = dirs::home_dir()
             .unwrap_or_else(|| PathBuf::from("/home"))
-            .join(".iotdb_his");
+            .join(".iotdb.his");
 
         let mut rl = Editor::<()>::new();
         if his_file.as_path().exists() {
@@ -253,8 +253,7 @@ impl Cli {
                     }
                 }
                 Err(ReadlineError::Interrupted) => {
-                    println!("Ctrl-C");
-                    break;
+                    continue;
                 }
                 Err(ReadlineError::Eof) => {
                     println!("Ctrl-D");
@@ -262,6 +261,7 @@ impl Cli {
                 }
                 Err(err) => {
                     println!("Error: {:?}", err);
+                    rl.save_history(his_file.as_path())?;
                     break;
                 }
             }
