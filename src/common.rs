@@ -5,6 +5,17 @@ use std::io::BufRead;
 use std::path::Path;
 use std::{fs, io};
 
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
+pub const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+pub const ASCII_NAME: &str = "
+▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
+ ██  ▄█▀    ██     ██     ██   ██   ██   ██
+ ██  ██      ██    ██     ██    ██  ██▀▀▀█▄
+ ██  ▀█▄     ██    ██     ██    ██  ██    ██
+▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀\t
+";
+
 /// Exec batch from sql str
 pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
     let mut session = Session::connect(conf)?;

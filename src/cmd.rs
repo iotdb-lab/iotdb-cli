@@ -1,4 +1,4 @@
-use crate::common;
+use crate::common::*;
 use crate::opt::{Cli, SubCmd};
 use crate::slogan;
 use iotdb::{Config, ConfigBuilder, Endpoint, Session};
@@ -20,7 +20,7 @@ impl Cli {
 
         // exec batch
         if let Some(file_path) = file {
-            common::exec_batch_from_file(conf, file_path.as_str())?;
+            exec_batch_from_file(conf, file_path.as_str())?;
             std::process::exit(0);
         }
 
@@ -38,7 +38,7 @@ impl Cli {
                     // exec sql form file
                     SubCmd::File { file_path } => {
                         if let Some(file) = file_path {
-                            common::exec_batch_from_file(conf, file)?;
+                            exec_batch_from_file(conf, file)?;
                         }
                     }
                     SubCmd::Usage => sub_cmd.help(),
@@ -80,9 +80,9 @@ impl Cli {
 
         // enable debug mode
         if *debug {
-            common::logger(LevelFilter::Debug);
+            logger(LevelFilter::Debug);
         } else {
-            common::logger(LevelFilter::Info);
+            logger(LevelFilter::Info);
         }
 
         // user and password
@@ -153,14 +153,15 @@ impl Cli {
             "Usage:\n{}\
         1. Print help info: `?` or `help` \n{}\
         2. Exec system command on local machine, eg: `!ps -ef`\n{}\
-        3. Exit: `exit` or `quit` or `Ctrl-C` or `Ctrl-D`\n",
-            fore_space, fore_space, fore_space
+        3. Get server version info: `version` \n{}\
+        4. Exit: `exit` or `quit` or `Ctrl-C` or `Ctrl-D`\n",
+            fore_space, fore_space, fore_space, fore_space
         )
     }
 
     /// Print help info
     pub fn help(&self) {
-        common::print_help();
+        print_help();
     }
 
     /// readline
@@ -190,22 +191,33 @@ impl Cli {
 
             match readline {
                 Ok(mut sql) => {
+                    rl.add_history_entry(sql.as_str());
                     if sql.starts_with("exit") || sql.starts_with("quit") {
-                        rl.add_history_entry(sql.as_str());
                         rl.save_history(his_file.as_path())?;
                         break;
                     }
 
                     if sql.eq("?") || sql.eq("help") {
-                        rl.add_history_entry(sql.as_str());
                         self.help();
                         continue;
                     }
 
                     if sql.starts_with('!') {
-                        rl.add_history_entry(sql.as_str());
+                        rl.save_history(his_file.as_path())?;
                         sql.remove(0);
                         self.exec_shell_cmd(sql)?;
+                        continue;
+                    }
+
+                    if sql.eq("version") {
+                        rl.save_history(his_file.as_path())?;
+                        let mut session = Session::connect(conf.clone())?;
+                        println!(
+                            "{}\nApache IoTDB Server version: {}\n",
+                            ASCII_NAME,
+                            session.get_properties()?.version
+                        );
+                        session.close()?;
                         continue;
                     }
 
@@ -219,7 +231,7 @@ impl Cli {
                                 continue;
                             }
                             rl.add_history_entry(sql.clone().as_str());
-                            common::show_exec_sql_from_str(conf.clone(), sql.clone())?;
+                            show_exec_sql_from_str(conf.clone(), sql.clone())?;
                         } else {
                             sql = format!("{}{}", tmp_sql, sql);
 
@@ -229,7 +241,7 @@ impl Cli {
                             }
                             println!("{}\n{}\n{}", split_line, sql, split_line);
                             rl.add_history_entry(sql.clone().as_str());
-                            common::show_exec_sql_from_str(conf.clone(), sql.clone())?;
+                            show_exec_sql_from_str(conf.clone(), sql.clone())?;
 
                             tmp_sql.clear();
                             max_str_len = 0;
