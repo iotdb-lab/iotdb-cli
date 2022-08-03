@@ -30,7 +30,6 @@ pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
         }
     }
     session.close()?;
-
     Ok(())
 }
 

@@ -70,7 +70,7 @@ iotdb -h
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
 Author: github.com/francis-du <me@francis.run>
-Version: iotdb-cli 0.0.3
+Version: iotdb-cli 0.1.0
 
 USAGE:
     iotdb [FLAGS] [OPTIONS] [sql] [SUBCOMMAND]
@@ -139,7 +139,7 @@ $ iotdb -u root -p root --e 127.0.0.1:6667 -t UTC+8
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀     
 
 Author: github.com/francis-du <me@francis.run>
-Version: iotdb-cli v0.0.3
+Version: iotdb-cli v0.1.0
 Usage:
     1. Print usage info: `?` or `help` 
     2. Exec system command on OS: `!ps`
