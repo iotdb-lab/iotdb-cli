@@ -1,5 +1,6 @@
 /target/
 .idea
+.fleet
 *.iml
 .DS_Store
 Cargo.lock
