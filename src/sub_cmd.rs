@@ -1,11 +1,10 @@
-use crate::common;
+use crate::common::*;
 use crate::opt::SubCmd;
-use crate::VERSION;
 
 impl SubCmd {
     /// Print help info
     pub fn help(&self) {
-        common::print_help();
+        print_help();
     }
 
     #[allow(dead_code)]

@@ -1,6 +1,5 @@
 use crate::common::*;
 use crate::opt::{Cli, SubCmd};
-use crate::slogan;
 use iotdb::{Config, ConfigBuilder, Endpoint, Session};
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
@@ -182,12 +181,11 @@ impl Cli {
         let mut max_str_len: usize = 0;
         loop {
             // TODO: is_open is invalid and needs to be fixed in iotdb-rs
-            let readline;
-            if !tmp_sql.is_empty() {
-                readline = rl.readline(".../ ");
+            let readline = if !tmp_sql.is_empty() {
+                rl.readline(".../ ")
             } else {
-                readline = rl.readline(prompt.as_str());
-            }
+                rl.readline(prompt.as_str())
+            };
 
             match readline {
                 Ok(mut sql) => {

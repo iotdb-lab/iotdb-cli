@@ -1,4 +1,4 @@
-use crate::{ASCII_NAME, AUTHORS, PKG_NAME};
+use crate::common::{ASCII_NAME, AUTHORS, PKG_NAME};
 use structopt::StructOpt;
 
 #[derive(Debug, Clone, StructOpt)]

@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "type": "cargo",
+            "name": "cargo run -- --dev",
+            "environment": {
+              
+          }, // optional
+            "dependsOn": [], // optional
+            "cargoArgs": [], // optional
+            "cargoExtraArgs": [], // optional
+            "executableArgs": [], // optional
+        }
+        
+    ]
+}

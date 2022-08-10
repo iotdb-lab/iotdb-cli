@@ -5,9 +5,6 @@ use std::io::BufRead;
 use std::path::Path;
 use std::{fs, io};
 
-pub const VERSION: &str = env!("CARGO_PKG_VERSION");
-pub const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
-pub const PKG_NAME: &str = env!("CARGO_PKG_NAME");
 pub const ASCII_NAME: &str = "
 ▀██▀  ▄▄█▀▀██   █▀▀██▀▀█ ▀██▀▀█▄   ▀██▀▀█▄
  ██  ▄█▀    ██     ██     ██   ██   ██   ██
@@ -15,6 +12,18 @@ pub const ASCII_NAME: &str = "
  ██  ▀█▄     ██    ██     ██    ██  ██    ██
 ▄██▄  ▀▀█▄▄▄█▀    ▄██▄   ▄██▄▄▄█▀  ▄██▄▄▄█▀\t
 ";
+
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+pub const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
+pub const PKG_NAME: &str = env!("CARGO_PKG_NAME");
+
+/// Pint slogan
+pub fn slogan() -> String {
+    format!(
+        "{}\nAuthor: {}\nVersion: {} v{}",
+        ASCII_NAME, AUTHORS, PKG_NAME, VERSION,
+    )
+}
 
 /// Exec batch from sql str
 pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
@@ -26,7 +35,7 @@ pub fn show_exec_sql_from_str(conf: Config, sql: String) -> anyhow::Result<()> {
         .map(|x| x.trim())
         .filter(|x| !x.is_empty())
         .filter(|x| !x.starts_with("--"))
-        .map(|x| x.replace("\n", " "))
+        .map(|x| x.replace('\n', " "))
         .collect();
 
     if sql_vec.len() > 1 {
@@ -111,6 +120,7 @@ pub fn logger(level: LevelFilter) {
     )]);
 }
 
+/// Print help infos
 pub fn print_help() {
     let help_info = include_str!("static/help_info");
     println!("{}", help_info);
